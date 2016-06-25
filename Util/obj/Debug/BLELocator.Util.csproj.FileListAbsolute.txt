@@ -1,0 +1,10 @@
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\BLELocator.Util.exe.config
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\BLELocator.Util.exe
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\BLELocator.Util.pdb
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\BLELocator.Core.dll
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\BLELocator.Core.pdb
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\obj\Debug\BLELocator.Util.csprojResolveAssemblyReference.cache
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\obj\Debug\BLELocator.Util.exe
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\obj\Debug\BLELocator.Util.pdb
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\System.Threading.Tasks.Dataflow.dll
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Util\bin\Debug\System.Threading.Tasks.Dataflow.xml

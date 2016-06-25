@@ -1,0 +1,6 @@
+c:\users\talf\documents\visual studio 2013\Projects\BLELocator\bin\Debug\BLELocator.exe.config
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\bin\Debug\BLELocator.exe
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\bin\Debug\BLELocator.pdb
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\obj\Debug\BLELocator.csprojResolveAssemblyReference.cache
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\obj\Debug\BLELocator.exe
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\obj\Debug\BLELocator.pdb
