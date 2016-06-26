@@ -1,0 +1,359 @@
+HCI sniffer - Bluetooth packet analyzer ver 5.37
+device: hci0 snap_len: 1500 filter: 0xffffffffffffffff
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -78
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -70
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -78
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -88
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -89
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -87
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -87
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -92
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -80
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -80
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -73
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -73
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -71
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -71
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -72
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -72
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -91
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -70
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -70
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -89
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -87
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -90
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -90
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -74
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -75
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -75
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -75
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -76
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:91:9D (Public)
+      Complete local name: 'LBHCOFJBJNGE'
+      TX power level: 0
+      RSSI: -77
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -93
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -93
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -88
+> HCI Event: LE Meta Event (0x3e) plen 42
+    LE Advertising Report
+      ADV_SCAN_IND - Scannable undirected advertising (2)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Flags: 0x1a
+      Unknown type 0xff with 25 bytes data
+      RSSI: -75
+> HCI Event: LE Meta Event (0x3e) plen 29
+    LE Advertising Report
+      SCAN_RSP - Scan Response (4)
+      bdaddr D0:39:72:E5:8F:35 (Public)
+      Complete local name: 'LBHCOFIPDFGE'
+      TX power level: 0
+      RSSI: -75

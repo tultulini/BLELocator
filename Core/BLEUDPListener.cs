@@ -10,14 +10,15 @@ namespace BLELocator.Core
     public class BLEUdpListener
     {
         private readonly int _listenPort;//11000
-        List<string> messages = new List<string>(5000);
+        public BleMessageParser MessageParser { get; set; }
         public BLEUdpListener(int listenPort)
         {
             _listenPort = listenPort;
-            StartListener();
+            
+            MessageParser = new BleMessageParser(string.Format("Port = {0}", _listenPort));
         }
 
-        private  void StartListener()
+        public  void StartListener()
         {
             var done = false;
 
@@ -31,10 +32,11 @@ namespace BLELocator.Core
                     Thread.Sleep(100);
                     //Console.WriteLine("Waiting for broadcast");
                     byte[] bytes = listener.Receive(ref groupEP);
+                    
                     var message = Encoding.ASCII.GetString(bytes);
-                    Console.Write(
-                        message);
-                    messages.Add(message);
+                    //Console.Write(
+                    //    message);
+                    MessageParser.ProcessMessage(message);
                 }
 
             }

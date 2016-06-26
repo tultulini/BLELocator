@@ -11,7 +11,23 @@ namespace Util
     {
         static void Main(string[] args)
         {
+            //var listener = new BLEUdpListener(11000);
+            ActivateUdpListener();
+        }
+
+        private static void ActivateUdpListener()
+        {
             var listener = new BLEUdpListener(11000);
+            listener.MessageParser.OnDeviceDiscovery += Console.WriteLine;
+            listener.StartListener();
+        }
+
+        private static void SimFileParser()
+        {
+            BleFileParser parser = new BleFileParser(@"C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\k1.txt");
+            parser.OnDeviceDiscovery += Console.WriteLine;
+            parser.Start();
+            Console.ReadLine();
         }
     }
 }
