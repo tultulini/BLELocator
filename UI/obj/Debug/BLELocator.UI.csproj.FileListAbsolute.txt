@@ -19,7 +19,11 @@ C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Main
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\App.g.cs
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI_MarkupCompile.cache
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.g.resources
-C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UIs.Properties.Resources.resources
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.csproj.GenerateResource.Cache
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.exe
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.pdb
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\ConfigWindow.baml
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\ConfigWindow.g.cs
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI_MarkupCompile.lref
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.Properties.Resources.resources

@@ -1,50 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Windows.Documents;
+using System.Threading;
 using BLELocator.Core;
+using BLELocator.Core.Contracts.Entities;
+using BLELocator.Core.Utils;
 using Newtonsoft.Json;
 
-namespace UI
+namespace BLELocator.UI
 {
     public class BleLocatorModel
     {
         public List<BLEUdpListener> BleUdpListeners { get; set; }
-        private BleSystemConfiguration _systemConfiguration;
-        public BleLocatorModel()
+        
+        private static BleLocatorModel _instance;
+        private readonly static object _instanceLock = new object();
+
+        private static string _configFilePath = Path.Combine(Directory.GetCurrentDirectory(),
+            typeof (BleSystemConfiguration).Name + ".json");
+
+        public static BleLocatorModel Instance
+        {
+            get
+            {
+                if (_instance != null)
+                    return _instance;
+                lock (_instanceLock)
+                {
+                    if (_instance != null)
+                        return _instance;
+                    var temp = new BleLocatorModel();
+                    Thread.MemoryBarrier();
+                    _instance = temp;
+                    return _instance;
+                }
+            }
+            
+        }
+
+        private BleLocatorModel()
         {
             BleUdpListeners = new List<BLEUdpListener>();
             LoadConfiguration();
         }
 
+        public BleSystemConfiguration BleSystemConfiguration { get; private set; }
+
+        public void SaveConfiguration()
+        {
+            Disconnect();
+            var json = JsonConvert.SerializeObject(BleSystemConfiguration);
+            using (var writer = new StreamWriter(_configFilePath, false))
+            {
+                writer.Write(json);
+            }
+        }
         private void LoadConfiguration()
         {
             var directory = Directory.GetCurrentDirectory();
-            var configFilePath = Path.Combine(directory, typeof (BleSystemConfiguration).Name + ".json");
-            if (!File.Exists(configFilePath))
+            if (!File.Exists(_configFilePath))
             {
-                _systemConfiguration = new BleSystemConfiguration
-                {
-                    BleReceivers = new Dictionary<string, BleReceiver> { {"rec1",new BleReceiver{IncomingPort = 11000, IPAddress = new IPAddress(new byte[]{10,0,0,7}),LocationName = "first in hall"} }},
-                    BleTransmitters = new Dictionary<string, BleTransmitter> { { "LBHCOFIPDFGE", new BleTransmitter { Name = "LBHCOFIPDFGE", MacAddress = "D0:39:72:E5:8F:35" } } }
-                };
-                var json = JsonConvert.SerializeObject(_systemConfiguration);
-                using (var writer = new StreamWriter(configFilePath,false))
-                {
-                    writer.Write(json);
-                }
-                throw new Exception("Config not set");
+                BleSystemConfiguration = new BleSystemConfiguration();
+               
+                return;
             }
-            foreach (var receiver in _systemConfiguration.BleReceivers)
+
+
+        }
+
+        public void Connect()
+        {
+            if (BleUdpListeners.HasSomething())
             {
+                foreach (var bleUdpListener in BleUdpListeners)
+                {
+                    bleUdpListener.Stop();
+                    bleUdpListener.MessageParser.OnDeviceDiscovery -= OnDeviceDiscovery;
+                }
+                BleUdpListeners.Clear();
+            }
+            foreach (var receiver in BleSystemConfiguration.BleReceivers)
+            {
+
                 var listener = new BLEUdpListener(receiver.Value.IncomingPort);
                 listener.MessageParser.OnDeviceDiscovery += OnDeviceDiscovery;
                 BleUdpListeners.Add(listener);
-                
+
             }
+            
+        }
 
-
+        public void Disconnect()
+        {
+            if (BleUdpListeners.HasSomething())
+            {
+                foreach (var bleUdpListener in BleUdpListeners)
+                {
+                    bleUdpListener.Stop();
+                    bleUdpListener.MessageParser.OnDeviceDiscovery -= OnDeviceDiscovery;
+                }
+                BleUdpListeners.Clear();
+            }
         }
 
         private void OnDeviceDiscovery(DeviceDiscoveryEvent obj)

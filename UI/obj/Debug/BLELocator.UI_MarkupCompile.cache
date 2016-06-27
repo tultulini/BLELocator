@@ -5,16 +5,16 @@ winexe
 C#
 .cs
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\
-BLELocator.UIs
+BLELocator.UI
 none
 false
 DEBUG;TRACE
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\App.xaml
-11151548125
+2638605316
 
-8594443366
-67-1880585433
-MainWindow.xaml;
+12637961480
+68-1141099665
+ConfigWindow.xaml;MainWindow.xaml;
 
 False
 

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Documents;
-using BLELocator.Core;
+using BLELocator.Core.Contracts.Entities;
 
-namespace UI
+namespace BLELocator.UI
 {
     public class BleSystemConfiguration
     {

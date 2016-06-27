@@ -4,13 +4,17 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using BLELocator.Core.Utils;
 
 namespace BLELocator.Core
 {
     public class BLEUdpListener
     {
         private readonly int _listenPort;//11000
+        private UdpClient _listener;
         public BleMessageParser MessageParser { get; set; }
+        private bool _keepReading;
         public BLEUdpListener(int listenPort)
         {
             _listenPort = listenPort;
@@ -20,20 +24,31 @@ namespace BLELocator.Core
 
         public  void StartListener()
         {
-            var done = false;
+            _keepReading = true;
+            if(_listener !=null)
+                _listener.Close();
+            _listener = new UdpClient( new IPEndPoint(IPAddress.Any,_listenPort));
 
-            var listener = new UdpClient(_listenPort);
-            var groupEP = new IPEndPoint(IPAddress.Any, _listenPort);
+            
+            Task.Run(() => ListenerLoop());
 
+        }
+
+        private async Task ListenerLoop()
+        {
             try
             {
-                while (!done)
+                while (!_keepReading)
                 {
-                    Thread.Sleep(100);
-                    //Console.WriteLine("Waiting for broadcast");
-                    byte[] bytes = listener.Receive(ref groupEP);
+                    //await Task.Delay(100);
                     
-                    var message = Encoding.ASCII.GetString(bytes);
+                    
+                    //Console.WriteLine("Waiting for broadcast");
+                    var bufferResult =await _listener.ReceiveAsync();
+                    if(bufferResult.Buffer.IsNullOrEmpty())
+                        continue;
+                    
+                    var message = Encoding.ASCII.GetString(bufferResult.Buffer);
                     //Console.Write(
                     //    message);
                     MessageParser.ProcessMessage(message);
@@ -44,10 +59,14 @@ namespace BLELocator.Core
             {
                 Console.WriteLine(e.ToString());
             }
-            finally
-            {
-                listener.Close();
-            }
-        } 
+            
+        }
+        public void Stop()
+        {
+            _keepReading = false;
+            if(_listener==null)
+                return;
+            _listener.Close();
+        }
     }
 }
