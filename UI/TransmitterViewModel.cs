@@ -1,5 +1,6 @@
 ﻿using System;
 using BLELocator.Core.Contracts.Entities;
+using BLELocator.Core.Utils;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -9,9 +10,6 @@ namespace BLELocator.UI
     {
         private string _transmitterName;
         private string _macAddress;
-        private string _locationName;
-        private float _positionX;
-        private float _positionY;
         private string _holderFirstName;
         private string _holderLastName;
         private RelayCommand _removeTransmitterCommand;
@@ -53,6 +51,7 @@ namespace BLELocator.UI
             {
                 _transmitterName = value;
                 RaisePropertyChanged(() => TransmitterName);
+                RaisePropertyChanged(() => IsValid);
             }
         }
 
@@ -63,9 +62,11 @@ namespace BLELocator.UI
             {
                 _macAddress = value;
                 RaisePropertyChanged(() => MacAddress);
+                RaisePropertyChanged(() => IsValid);
             }
         }
 
+        public bool IsValid { get { return MacAddress.IsValidMacAddress() && TransmitterName.HasSomething(); }}
        
 
        

@@ -5,16 +5,19 @@
         Title="ConfigWindow"
         SizeToContent="WidthAndHeight"
         Width="300"
+        FontSize="18"
         >
     <Window.DataContext>
         <local:ConfigViewModel></local:ConfigViewModel>
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="Width" Value="150"></Setter>
+            <Setter Property="Width"
+                    Value="150"></Setter>
         </Style>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></local:BooleanToVisibilityConverter>
     </Window.Resources>
-        <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical">
         <GroupBox Header="Transmitter Tags">
             <StackPanel Orientation="Vertical">
                 <ListBox ItemsSource="{Binding Transmitters}">
@@ -69,7 +72,7 @@
                                          Grid.Column="6"
                                          Text="{Binding MacAddress, Mode=TwoWay}"></TextBox>
 
-                                <TextBlock Grid.Row="0"
+                                <!--<TextBlock Grid.Row="0"
                                            Grid.Column="8"
                                            Text="X"></TextBlock>
                                 <TextBox Grid.Row="0"
@@ -77,70 +80,136 @@
                                          Text="{Binding Position.X, Mode=TwoWay}"></TextBox>
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="12"
-                                           Text="Y"></TextBlock>
-                                <TextBox Grid.Row="0"
-                                         Grid.Column="14"
-                                         Text="{Binding Position.Y, Mode=TwoWay}"></TextBox>
+                                           Text="Y"></TextBlock>-->
+                                <!--<TextBox Grid.Row="0"
+                                         Grid.Column="8"
+                                         Text="{Binding Position.Y, Mode=TwoWay}"></TextBox>-->
                                 <TextBlock Grid.Row="0"
-                                           Grid.Column="16"
+                                           Grid.Column="10"
                                            Text="First Name"></TextBlock>
                                 <TextBox Grid.Row="0"
-                                         Grid.Column="18"
+                                         Grid.Column="12"
                                          Text="{Binding TagHolder.FirstName, Mode=TwoWay}"></TextBox>
                                 <TextBlock Grid.Row="0"
-                                           Grid.Column="20"
+                                           Grid.Column="14"
                                            Text="Last Name"></TextBlock>
                                 <TextBox Grid.Row="0"
-                                         Grid.Column="22"
+                                         Grid.Column="16"
                                          Text="{Binding TagHolder.LastName, Mode=TwoWay}"></TextBox>
                                 <Button  Grid.Row="0"
-                                         Grid.Column="24"
+                                         Grid.Column="18"
                                          Content="-"
                                          Command="{Binding RemoveTransmitterCommand}"></Button>
+                                <Rectangle Grid.Row="0"
+                                           Grid.Column="20"
+                                           Fill="Red" Width="15" Height="15" Visibility="{Binding IsValid, Converter={StaticResource BooleanToVisibilityConverter}}"></Rectangle>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-               
+
                 <Button  Content="Add"
-                         Command="{Binding AddTransmitterCommand}" Width="100"></Button>
+                         Margin="10"
+                         Command="{Binding AddTransmitterCommand}"
+                         HorizontalAlignment="Left"
+                         Width="100"></Button>
             </StackPanel>
         </GroupBox>
 
         <GroupBox Header="Receivers">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="10"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="10"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="10"></RowDefinition>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="2"
-                           Grid.Column="0"
-                           Text="IPAddress"></TextBlock>
-            </Grid>
+            <StackPanel>
+                <ListBox ItemsSource="{Binding Receivers}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="10"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="10"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="IPAddress"></TextBlock>
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="2"
+                                         Text="{Binding IPAddress}"></TextBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="4"
+                                           Text="Port"></TextBlock>
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="6"
+                                         Text="{Binding IncomingPort}"></TextBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="8"
+                                           Text="Location"></TextBlock>
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="10"
+                                         Text="{Binding LocationName}"></TextBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="12"
+                                           Text="X"></TextBlock>
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="14"
+                                         Text="{Binding PositionX}"></TextBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="16"
+                                           Text="Y"></TextBlock>
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="18"
+                                         Text="{Binding PositionY}"></TextBox>
+                                <Button  Grid.Row="0"
+                                         Grid.Column="20"
+                                         Content="-"
+                                         Command="{Binding RemoveReceiverCommand}"></Button>
+                                <Rectangle Grid.Row="0"
+                                           Grid.Column="22"
+                                           Fill="Red"
+                                           Width="15"
+                                           Height="15"
+                                           Visibility="{Binding IsValid, Converter={StaticResource BooleanToVisibilityConverter}}"></Rectangle>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button  Content="Add"
+                         Margin="10"
+                         HorizontalAlignment="Left"
+                         Command="{Binding AddReceiverCommand}"
+                         Width="100"></Button>
+            </StackPanel>
         </GroupBox>
+        <Button HorizontalAlignment="Right"
+                Margin="20"
+                Width="100"
+                Content="Save"
+                Command="{Binding SaveConfigurationCommnand}"></Button>
     </StackPanel>
 </Window>

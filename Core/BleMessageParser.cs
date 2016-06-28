@@ -18,7 +18,6 @@ namespace BLELocator.Core
 
         private const string MacAddressKey = "bdaddr";
         private const string DeviceNameKey = "Complete local name";
-        readonly Regex _regexMacAddress = new Regex(@"^[0-9a-fA-F]{2}(((:[0-9a-fA-F]{2}){5})|((:[0-9a-fA-F]{2}){5}))$");
         private const string RssiKey = "RSSI:";
         private readonly string _messageSource;
         public BleMessageParser(string messageSource)
@@ -74,7 +73,7 @@ namespace BLELocator.Core
             var lineParts = line.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var linePart in lineParts)
             {
-                if (_regexMacAddress.IsMatch(linePart))
+                if (linePart.IsValidMacAddress())
                 {
                     discoveryEvent.DeviceDetails.MacAddress = linePart;
                     return;

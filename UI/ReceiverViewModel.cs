@@ -22,7 +22,7 @@ namespace BLELocator.UI
         public RelayCommand RemoveReceiverCommand
         {
             get { return _removeReceiverCommand ?? (_removeReceiverCommand = new RelayCommand(OnRemoveReceiver)); }
-            
+
         }
 
         private void OnRemoveReceiver()
@@ -33,7 +33,11 @@ namespace BLELocator.UI
         public ReceiverViewModel(BleReceiver receiver)
         {
             BleReceiver = receiver;
-            IPAddress = receiver.IPAddress.ToString();
+            if (receiver.IPAddress != null)
+            {
+                IPAddress = receiver.IPAddress.ToString();
+
+            }
             IncomingPort = receiver.IncomingPort;
             LocationName = receiver.LocationName;
             PositionX = receiver.Position.X;
@@ -44,7 +48,7 @@ namespace BLELocator.UI
         public void UpdateEntity()
         {
 
-            BleReceiver.IPAddress = IPAddress.IsNullOrEmpty()?null:System.Net.IPAddress.Parse(IPAddress);
+            BleReceiver.IPAddress = IPAddress.IsNullOrEmpty() ? null : System.Net.IPAddress.Parse(IPAddress);
             BleReceiver.IncomingPort = IncomingPort;
             BleReceiver.LocationName = LocationName;
             BleReceiver.Position = new PointF(PositionX, PositionY);
@@ -59,8 +63,10 @@ namespace BLELocator.UI
                 if (System.Net.IPAddress.TryParse(value, out ipAddress))
                 {
                     _ipAddress = value;
-                } 
-                RaisePropertyChanged(()=>IPAddress);
+                }
+                RaisePropertyChanged(() => IPAddress);
+                RaisePropertyChanged(() => IsValid);
+
             }
         }
 
@@ -71,6 +77,7 @@ namespace BLELocator.UI
             {
                 _incomingPort = value;
                 RaisePropertyChanged(() => IncomingPort);
+                RaisePropertyChanged(() => IsValid);
             }
         }
 
@@ -103,5 +110,7 @@ namespace BLELocator.UI
                 RaisePropertyChanged(() => PositionY);
             }
         }
+
+        public bool IsValid { get { return IPAddress.IsValidIP() && IncomingPort > 0; } }
     }
 }

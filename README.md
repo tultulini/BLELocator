@@ -1,3 +1,32 @@
+***************
+Setting up NUC
+***************
+computer name: ble-nuc-<n> where n is a running number from 1
+user name: bleadmin
+password: ble123456
+******************
+Setting up hcitool
+******************
+1) sudo apt-get update
+2) $> sudo apt-get install libcap2-bin
+3) $> sudo setcap 'cap_net_raw,cap_net_admin+eip' `which hcitool`
+
+**********************
+Install OpenSSH server
+**********************
+1) $> apt-get install openssh-server
+2) $> ssh bleadmin@localhost
+3) $> ssh bleadmin@<ip>
+4) other commands:
+	$> service ssh stop
+	$> service ssh start
+	$> service ssh restart
+	$> service ssh status
+
+**********************
+
+
+
 sudo btmon & hcitool lescan
 if doesn't manage to lescan try:
 hciconfig hci0 down

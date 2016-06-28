@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="ReceiverViewModel.cs" />
     <Compile Include="TransmitterViewModel.cs" />
     <Page Include="ConfigWindow.xaml">
