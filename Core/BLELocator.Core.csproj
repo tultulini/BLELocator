@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Deployment\3rd Party\JsonNet\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations" />
     <Reference Include="System.Core" />
@@ -48,15 +51,20 @@
   <ItemGroup>
     <Compile Include="BleFileParser.cs" />
     <Compile Include="BleMessageParser.cs" />
+    <Compile Include="Contracts\Entities\BleConnectionStateMessage.cs" />
     <Compile Include="Contracts\Entities\BleReceiver.cs" />
     <Compile Include="Contracts\Entities\BleTransmitter.cs" />
     <Compile Include="BLEUDPListener.cs" />
     <Compile Include="Contracts\Entities\DeviceDetails.cs" />
     <Compile Include="Contracts\Entities\DeviceDiscoveryEvent.cs" />
+    <Compile Include="Contracts\Entities\EventCaptureSession.cs" />
     <Compile Include="Contracts\Entities\MessageWrapper.cs" />
     <Compile Include="Contracts\Entities\TagHolder.cs" />
+    <Compile Include="Contracts\Enums\BleConnectionState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CollectionExtensions.cs" />
+    <Compile Include="Utils\JsonConverterDictionary.cs" />
+    <Compile Include="Utils\JsonConverterIPAddress.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

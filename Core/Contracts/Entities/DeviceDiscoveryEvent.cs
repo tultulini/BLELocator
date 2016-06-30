@@ -4,6 +4,7 @@ namespace BLELocator.Core.Contracts.Entities
 {
     public class DeviceDiscoveryEvent
     {
+        public BleReceiver BleReceiver { get; set; }
         public DeviceDetails DeviceDetails { get; set; }
         public DateTime TimeStamp { get; set; }
         public string SourceAddress { get; set; }

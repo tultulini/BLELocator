@@ -47,6 +47,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Deployment\3rd Party\TPL4.5\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -65,8 +69,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="CaptureSessionDetailsView.xaml.cs">
+      <DependentUpon>CaptureSessionDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CaptureSessionDetailsViewModel.cs" />
+    <Compile Include="LoggedViewModel.cs" />
     <Compile Include="ReceiverViewModel.cs" />
     <Compile Include="TransmitterViewModel.cs" />
+    <Page Include="CaptureSessionDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,6 +139,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Settings-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\connect-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Record-Normal-Red-icon.png" />
+    <Resource Include="Images\Stop Normal Blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 
 namespace BLELocator.Core
@@ -9,7 +10,7 @@ namespace BLELocator.Core
     {
         private FileInfo _file;
         private string _fileContent;
-        public BleFileParser(string fileName) : base(fileName)
+        public BleFileParser(string fileName, Action<DeviceDiscoveryEvent> discoveryHandler) : base(fileName,discoveryHandler)
         {
             if(fileName.IsNullOrEmpty())
                 throw new ArgumentNullException("fileName");

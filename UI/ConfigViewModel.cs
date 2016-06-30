@@ -8,17 +8,20 @@ using GalaSoft.MvvmLight.Command;
 
 namespace BLELocator.UI
 {
-    public class ConfigViewModel : ViewModelBase
+    public class ConfigViewModel : LoggedViewModel
     {
         private RelayCommand _addReceiverCommand;
         private RelayCommand _addTransmitterCommand;
         private RelayCommand _saveConfigurationCommnand;
+        private ObservableCollection<string> _messages;
 
         public ConfigViewModel()
         {
             Transmitters = new ObservableCollection<TransmitterViewModel>();
             Receivers = new ObservableCollection<ReceiverViewModel>();
+            Messages = new ObservableCollection<string>();
             LoadExistingConfiguration();
+            InsertMessage("Loaded");
         }
 
         private void LoadExistingConfiguration()
@@ -122,12 +125,8 @@ namespace BLELocator.UI
             return true;
         }
 
-        private void InsertMessage(string message)
-        {
-                    Messages.Insert(0,string.Format("{0:s} - {1}",DateTime.Now,message));
-            
-        }
-        public ObservableCollection<string> Messages { get; set; }
+
+       
         private void OnSaveConfiguration()
         {
             if(!ValidateConfiguration())
@@ -149,6 +148,7 @@ namespace BLELocator.UI
                 config.BleTransmitters[transmitter.TransmitterName] = transmitter;
             }
             model.SaveConfiguration();
+            InsertMessage("Configuration Saved");
         }
 
         private void OnAddReceiver()

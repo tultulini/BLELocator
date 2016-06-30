@@ -10,12 +10,12 @@ Setting up hcitool
 1) sudo apt-get update
 2) $> sudo apt-get install libcap2-bin
 3) $> sudo setcap 'cap_net_raw,cap_net_admin+eip' `which hcitool`
-
+4) sudo apt-get install bluez-hcidump
 **********************
 Install OpenSSH server
 **********************
 1) $> apt-get install openssh-server
-2) $> ssh bleadmin@localhost
+2) $> ssh bleadmin@localhostc
 3) $> ssh bleadmin@<ip>
 4) other commands:
 	$> service ssh stop
@@ -79,4 +79,4 @@ sudo hcidump -a | nc 10.0.0.5 1234
 Over UDP
 **********
 To Send:
-sudo hcidump -a > /dev/udp/10.0.0.5/11000
+sudo hcidump -a > /dev/udp/10.0.0.16/12000

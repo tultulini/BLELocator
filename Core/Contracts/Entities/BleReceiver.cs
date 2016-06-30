@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Net;
+using BLELocator.Core.Utils;
+using Newtonsoft.Json;
 
 namespace BLELocator.Core.Contracts.Entities
 {
     public class BleReceiver : IEquatable<BleReceiver>
     {
+        [JsonConverter(typeof(JsonConverterIPAddress))]
         public IPAddress IPAddress { get; set; }
         public int IncomingPort { get; set; }
         public string LocationName { get; set; }

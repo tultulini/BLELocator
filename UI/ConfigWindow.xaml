@@ -72,30 +72,19 @@
                                          Grid.Column="6"
                                          Text="{Binding MacAddress, Mode=TwoWay}"></TextBox>
 
-                                <!--<TextBlock Grid.Row="0"
-                                           Grid.Column="8"
-                                           Text="X"></TextBlock>
-                                <TextBox Grid.Row="0"
-                                         Grid.Column="10"
-                                         Text="{Binding Position.X, Mode=TwoWay}"></TextBox>
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="12"
-                                           Text="Y"></TextBlock>-->
-                                <!--<TextBox Grid.Row="0"
-                                         Grid.Column="8"
-                                         Text="{Binding Position.Y, Mode=TwoWay}"></TextBox>-->
+                                
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="10"
                                            Text="First Name"></TextBlock>
                                 <TextBox Grid.Row="0"
                                          Grid.Column="12"
-                                         Text="{Binding TagHolder.FirstName, Mode=TwoWay}"></TextBox>
+                                         Text="{Binding HolderFirstName, Mode=TwoWay}"></TextBox>
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="14"
                                            Text="Last Name"></TextBlock>
                                 <TextBox Grid.Row="0"
                                          Grid.Column="16"
-                                         Text="{Binding TagHolder.LastName, Mode=TwoWay}"></TextBox>
+                                         Text="{Binding HolderLastName, Mode=TwoWay}"></TextBox>
                                 <Button  Grid.Row="0"
                                          Grid.Column="18"
                                          Content="-"
@@ -211,5 +200,8 @@
                 Width="100"
                 Content="Save"
                 Command="{Binding SaveConfigurationCommnand}"></Button>
+        <GroupBox Header="Log" HorizontalAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Messages, Mode=OneWay}" HorizontalAlignment="Stretch" Height="300"></ListBox>
+        </GroupBox>
     </StackPanel>
 </Window>

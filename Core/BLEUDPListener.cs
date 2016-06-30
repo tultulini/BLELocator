@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using BLELocator.Core.Contracts.Entities;
+using BLELocator.Core.Contracts.Enums;
 using BLELocator.Core.Utils;
 
 namespace BLELocator.Core
@@ -13,23 +15,63 @@ namespace BLELocator.Core
     {
         private readonly int _listenPort;//11000
         private UdpClient _listener;
-        public BleMessageParser MessageParser { get; set; }
+        private BleMessageParser MessageParser { get; set; }
+        public event Action<DeviceDiscoveryEvent> OnDeviceDiscovery = delegate {  };
+        public event Action<BleConnectionStateMessage> OnConnectionStateChanged;
         private bool _keepReading;
-        public BLEUdpListener(int listenPort)
+        private readonly BleReceiver _receiver;
+        public BLEUdpListener(BleReceiver   receiver)
         {
-            _listenPort = listenPort;
-            
-            MessageParser = new BleMessageParser(string.Format("Port = {0}", _listenPort));
+            if(receiver == null)
+                throw new ArgumentNullException("receiver");
+            _receiver = receiver;
+            _listenPort = _receiver.IncomingPort;
+
+            MessageParser = new BleMessageParser(string.Format("Port = {0}", _listenPort), de =>
+            {
+                de.BleReceiver = _receiver;
+                OnDeviceDiscovery(de);
+            });
         }
 
-        public  void StartListener()
+        public void StartListener()
         {
             _keepReading = true;
-            if(_listener !=null)
-                _listener.Close();
-            _listener = new UdpClient( new IPEndPoint(IPAddress.Any,_listenPort));
+            try
+            {
+                if (_listener != null)
+                    _listener.Close();
+                _listener = new UdpClient(new IPEndPoint(IPAddress.Any, _listenPort));
 
-            
+            }
+            catch (Exception exception)
+            {
+                var errorMessage = string.Format("Couldn't listen to Port {0}. Exception: {1}", _listenPort,
+                    exception);
+                Console.WriteLine(errorMessage);
+                if (OnConnectionStateChanged != null)
+                {
+                    var connectionStateMessage = new BleConnectionStateMessage
+                    {
+                        Receiver = _receiver,
+                        ConnectionState = BleConnectionState.Disconnected,
+                        Message = errorMessage
+                    };
+                    OnConnectionStateChanged(connectionStateMessage);
+                }
+                return;
+
+            }
+            if (OnConnectionStateChanged != null)
+            {
+                var connectionStateMessage = new BleConnectionStateMessage
+                {
+                    Receiver = _receiver,
+                    ConnectionState = BleConnectionState.Connected,
+                    Message = string.Format("Listening to port {0}",_receiver.IncomingPort)
+                };
+                OnConnectionStateChanged(connectionStateMessage);
+            }
             Task.Run(() => ListenerLoop());
 
         }
@@ -38,16 +80,16 @@ namespace BLELocator.Core
         {
             try
             {
-                while (!_keepReading)
+                while (_keepReading)
                 {
                     //await Task.Delay(100);
-                    
-                    
+
+
                     //Console.WriteLine("Waiting for broadcast");
-                    var bufferResult =await _listener.ReceiveAsync();
-                    if(bufferResult.Buffer.IsNullOrEmpty())
+                    var bufferResult = await _listener.ReceiveAsync();
+                    if (bufferResult.Buffer.IsNullOrEmpty())
                         continue;
-                    
+
                     var message = Encoding.ASCII.GetString(bufferResult.Buffer);
                     //Console.Write(
                     //    message);
@@ -55,18 +97,40 @@ namespace BLELocator.Core
                 }
 
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e.ToString());
+                var errorMessage = string.Format("Exception occured in ListenerLoop. Not listening to Port {0}. Exception: {1}", _listenPort,
+                    exception);
+                Console.WriteLine(errorMessage);
+                if (OnConnectionStateChanged != null)
+                {
+                    var connectionStateMessage = new BleConnectionStateMessage
+                    {
+                        Receiver = _receiver,
+                        ConnectionState = BleConnectionState.Disconnected,
+                        Message = errorMessage
+                    };
+                    OnConnectionStateChanged(connectionStateMessage);
+                }
             }
-            
+
         }
         public void Stop()
         {
             _keepReading = false;
-            if(_listener==null)
+            if (_listener == null)
                 return;
             _listener.Close();
+            if (OnConnectionStateChanged != null)
+            {
+                var connectionStateMessage = new BleConnectionStateMessage
+                {
+                    Receiver = _receiver,
+                    ConnectionState = BleConnectionState.Disconnected,
+                    Message = string.Format("Stopped listening to port {0}", _receiver.IncomingPort)
+                };
+                OnConnectionStateChanged(connectionStateMessage);
+            }
         }
     }
 }

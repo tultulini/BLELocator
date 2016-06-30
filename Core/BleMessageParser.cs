@@ -11,7 +11,7 @@ namespace BLELocator.Core
     {
         private const string MessageStart = ">";
         private MessageWrapper _previousMessage;
-        public event Action<DeviceDiscoveryEvent> OnDeviceDiscovery;
+        protected readonly Action<DeviceDiscoveryEvent> OnDeviceDiscovery;
         private readonly ActionBlock<MessageWrapper> _finalizedMessageProcessor;
         private const string UnkownDeviceName = "Unknown";
 
@@ -20,14 +20,15 @@ namespace BLELocator.Core
         private const string DeviceNameKey = "Complete local name";
         private const string RssiKey = "RSSI:";
         private readonly string _messageSource;
-        public BleMessageParser(string messageSource)
+        public BleMessageParser(string messageSource, Action<DeviceDiscoveryEvent> deviceDiscoveryHandler)
         {
             if(messageSource.IsNullOrEmpty())
                 throw new ArgumentNullException("messageSource");
             _messageSource = messageSource;
             _finalizedMessageProcessor = new ActionBlock<MessageWrapper>(messageWrapper=>ProcessFinalizedMessage(messageWrapper));
             _previousMessage = new MessageWrapper();
-            
+            OnDeviceDiscovery = deviceDiscoveryHandler;
+
         }
 
         private void ProcessFinalizedMessage(MessageWrapper messageWrapper)

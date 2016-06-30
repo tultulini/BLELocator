@@ -5,3 +5,5 @@ C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\obj\Debug\BL
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\obj\Debug\BLELocator.Core.pdb
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\bin\Debug\System.Threading.Tasks.Dataflow.dll
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\bin\Debug\System.Threading.Tasks.Dataflow.xml
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\bin\Debug\Newtonsoft.Json.dll
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\Core\bin\Debug\Newtonsoft.Json.xml
