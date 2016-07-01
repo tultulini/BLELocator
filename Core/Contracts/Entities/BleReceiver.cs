@@ -20,7 +20,8 @@ namespace BLELocator.Core.Contracts.Entities
 
         public override string ToString()
         {
-            return string.Format("IPAddress:{0}, IncomingPort: {1}, LocationName: {2}, Position: {3}",IPAddress,IncomingPort,LocationName,Position);
+            return string.Format("IPAddress:{0}, IncomingPort: {1}, LocationName: {2}, Position: {3}, IsEnabled: {4}",
+                IPAddress, IncomingPort, LocationName, Position, IsEnabled);
         }
 
         public override int GetHashCode()
@@ -32,5 +33,7 @@ namespace BLELocator.Core.Contracts.Entities
         {
             return Equals(obj as BleReceiver);
         }
+
+        public bool IsEnabled { get; set; }
     }
 }

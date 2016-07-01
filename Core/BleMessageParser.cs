@@ -19,12 +19,9 @@ namespace BLELocator.Core
         private const string MacAddressKey = "bdaddr";
         private const string DeviceNameKey = "Complete local name";
         private const string RssiKey = "RSSI:";
-        private readonly string _messageSource;
-        public BleMessageParser(string messageSource, Action<DeviceDiscoveryEvent> deviceDiscoveryHandler)
+        public BleMessageParser( Action<DeviceDiscoveryEvent> deviceDiscoveryHandler)
         {
-            if(messageSource.IsNullOrEmpty())
-                throw new ArgumentNullException("messageSource");
-            _messageSource = messageSource;
+           
             _finalizedMessageProcessor = new ActionBlock<MessageWrapper>(messageWrapper=>ProcessFinalizedMessage(messageWrapper));
             _previousMessage = new MessageWrapper();
             OnDeviceDiscovery = deviceDiscoveryHandler;
@@ -48,7 +45,7 @@ namespace BLELocator.Core
                 {DeviceNameKey, ExtractDeviceName},
                 {RssiKey, ExtractRSSI}
             };
-            var discoveryEvent = new DeviceDiscoveryEvent{DeviceDetails = new DeviceDetails(),SourceAddress = _messageSource, TimeStamp = now};
+            var discoveryEvent = new DeviceDiscoveryEvent{DeviceDetails = new DeviceDetails(), TimeStamp = now};
             foreach (var line in lines)
             {
                 string foundKey = null;

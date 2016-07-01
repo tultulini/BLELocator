@@ -61,8 +61,10 @@
     <Compile Include="Contracts\Entities\MessageWrapper.cs" />
     <Compile Include="Contracts\Entities\TagHolder.cs" />
     <Compile Include="Contracts\Enums\BleConnectionState.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CollectionExtensions.cs" />
+    <Compile Include="Utils\FiniteList.cs" />
     <Compile Include="Utils\JsonConverterDictionary.cs" />
     <Compile Include="Utils\JsonConverterIPAddress.cs" />
     <Compile Include="Utils\StringExtensions.cs" />

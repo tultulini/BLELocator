@@ -10,7 +10,7 @@ namespace BLELocator.Core
     {
         private FileInfo _file;
         private string _fileContent;
-        public BleFileParser(string fileName, Action<DeviceDiscoveryEvent> discoveryHandler) : base(fileName,discoveryHandler)
+        public BleFileParser(string fileName, Action<DeviceDiscoveryEvent> discoveryHandler) : base(discoveryHandler)
         {
             if(fileName.IsNullOrEmpty())
                 throw new ArgumentNullException("fileName");

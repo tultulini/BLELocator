@@ -27,7 +27,7 @@ namespace BLELocator.Core
             _receiver = receiver;
             _listenPort = _receiver.IncomingPort;
 
-            MessageParser = new BleMessageParser(string.Format("Port = {0}", _listenPort), de =>
+            MessageParser = new BleMessageParser(de =>
             {
                 de.BleReceiver = _receiver;
                 OnDeviceDiscovery(de);
