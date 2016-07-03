@@ -29,3 +29,5 @@ C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLEL
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\BLELocator.UI.Properties.Resources.resources
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\CaptureSessionDetailsView.baml
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\CaptureSessionDetailsView.g.cs
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\MapWindow.baml
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\MapWindow.g.cs
