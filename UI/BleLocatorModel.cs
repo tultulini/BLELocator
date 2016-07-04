@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -106,7 +108,8 @@ namespace BLELocator.UI
             }
             foreach (var receiver in BleSystemConfiguration.BleReceivers)
             {
-
+                if(!receiver.Value.IsEnabled)
+                    continue;
                 var listener = new BLEUdpListener(receiver.Value);
                 listener.OnDeviceDiscovery += OnDeviceDiscovery;
                 BleUdpListeners.Add(listener);
@@ -133,6 +136,7 @@ namespace BLELocator.UI
             StopCapturing();
             _capturedEventsSession.Reset();
             _capturedEventsSession.Start = DateTime.Now;
+            OnLogMessage("Starting Capture");
             foreach (var bleTransmitter in BleSystemConfiguration.BleTransmitters)
             {
                 _capturedEventsSession.CapturedEvents.Add(bleTransmitter.Value.TransmitterName, new List<DeviceDiscoveryEvent>(InitialEventCount));
@@ -146,7 +150,7 @@ namespace BLELocator.UI
             List<DeviceDiscoveryEvent> events;
             lock (_captureLock)
             {
-                if (!_capturingEvents)
+                if (!_capturingEvents || discoveryEvent.DeviceDetails.Name.IsNullOrEmpty())
                     return;
                 if (_capturedEventsSession.CapturedEvents.TryGetValue(discoveryEvent.DeviceDetails.Name, out events))
                     events.Add(discoveryEvent); 
@@ -173,6 +177,7 @@ namespace BLELocator.UI
                     writer.Write(json);
                 }
                 _capturedEventsSession.Reset();
+                Process.Start("explorer.exe", string.Format("/select,\"{0}\"", jsonFilePath));
             }
         }
 
@@ -193,6 +198,11 @@ namespace BLELocator.UI
             if (_capturingEvents)
             {
                 _captureEventHandler.Post(discoveryEvent);
+                if(discoveryEvent.DeviceDetails.Name.IsNullOrEmpty() || !BleSystemConfiguration.BleTransmitters.ContainsKey(discoveryEvent.DeviceDetails.Name))
+                    return;
+                OnLogMessage(string.Format("Discovered: Name: {0}, RSSI: {1}", discoveryEvent.DeviceDetails.Name,
+                    discoveryEvent.Rssi));
+
             }
         }
 

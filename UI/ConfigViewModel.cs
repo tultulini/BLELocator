@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace BLELocator.UI
@@ -13,13 +11,13 @@ namespace BLELocator.UI
         private RelayCommand _addReceiverCommand;
         private RelayCommand _addTransmitterCommand;
         private RelayCommand _saveConfigurationCommnand;
-        private ObservableCollection<string> _messages;
 
         public ConfigViewModel()
         {
-            Transmitters = new ObservableCollection<TransmitterViewModel>();
+            Transmitters = new ObservableCollection<TransmitterEntryViewModel>();
             Receivers = new ObservableCollection<ReceiverViewModel>();
             Messages = new ObservableCollection<string>();
+            
             LoadExistingConfiguration();
             InsertMessage("Loaded");
         }
@@ -31,35 +29,35 @@ namespace BLELocator.UI
             {
                 foreach (var bleReceiver in config.BleReceivers)
                 {
-                    var viewModel = new ReceiverViewModel(bleReceiver.Value);
-                    viewModel.OnRemove += (vm) => Receivers.Remove(vm);
+                    var viewModel = new ReceiverEntryViewModel(bleReceiver.Value);
+                    viewModel.OnRemove += vm => Receivers.Remove(vm);
                     Receivers.Add(viewModel);
                 }
             }
             else
             {
-                var viewModel = new ReceiverViewModel(new BleReceiver());
-                viewModel.OnRemove += (vm) => Receivers.Remove(vm);
+                var viewModel = new ReceiverEntryViewModel(new BleReceiver());
+                viewModel.OnRemove += vm => Receivers.Remove(vm);
                 Receivers.Add(viewModel);
             }
             if (config.BleTransmitters.HasSomething())
             {
                 foreach (var transmitter in config.BleTransmitters)
                 {
-                    var viewModel = new TransmitterViewModel(transmitter.Value);
-                    viewModel.OnRemove += (vm) => Transmitters.Remove(vm);
+                    var viewModel = new TransmitterEntryViewModel(transmitter.Value);
+                    viewModel.OnRemove += vm => Transmitters.Remove(vm);
                     Transmitters.Add(viewModel);
                 }
             }
             else
             {
-                var viewModel = new TransmitterViewModel(new BleTransmitter());
-                viewModel.OnRemove += (vm) => Transmitters.Remove(vm);
+                var viewModel = new TransmitterEntryViewModel(new BleTransmitter());
+                viewModel.OnRemove += vm => Transmitters.Remove(vm);
                 Transmitters.Add(viewModel);
             }
         }
 
-        public ObservableCollection<TransmitterViewModel> Transmitters { get; set; }
+        public ObservableCollection<TransmitterEntryViewModel> Transmitters { get; set; }
         public ObservableCollection<ReceiverViewModel> Receivers { get; set; }
 
         public RelayCommand AddReceiverCommand
@@ -153,8 +151,8 @@ namespace BLELocator.UI
 
         private void OnAddReceiver()
         {
-            var viewModel = new ReceiverViewModel(new BleReceiver());
-            viewModel.OnRemove += (vm) => Receivers.Remove(vm);
+            var viewModel = new ReceiverEntryViewModel(new BleReceiver());
+            viewModel.OnRemove += vm => Receivers.Remove(vm);
             Receivers.Add(viewModel);
         }
 
@@ -166,8 +164,8 @@ namespace BLELocator.UI
         private void OnAddTransmitter()
         {
             var bleTrans = new BleTransmitter();
-            var viewModel = new TransmitterViewModel(bleTrans);
-            viewModel.OnRemove += (vm) => Transmitters.Remove(vm);
+            var viewModel = new TransmitterEntryViewModel(bleTrans);
+            viewModel.OnRemove += vm => Transmitters.Remove(vm);
             Transmitters.Add(viewModel);
         }
     }

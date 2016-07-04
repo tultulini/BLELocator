@@ -136,6 +136,8 @@
                                     <ColumnDefinition Width="10"></ColumnDefinition>
                                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                                     <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
@@ -173,12 +175,13 @@
                                 <TextBox Grid.Row="0"
                                          Grid.Column="18"
                                          Text="{Binding PositionY}"></TextBox>
+                                <CheckBox Grid.Row="0" Grid.Column="20" IsChecked="{Binding IsEnabled}" Content="Enabled"></CheckBox>
                                 <Button  Grid.Row="0"
-                                         Grid.Column="20"
+                                         Grid.Column="22"
                                          Content="-"
                                          Command="{Binding RemoveReceiverCommand}"></Button>
                                 <Rectangle Grid.Row="0"
-                                           Grid.Column="22"
+                                           Grid.Column="24"
                                            Fill="Red"
                                            Width="15"
                                            Height="15"

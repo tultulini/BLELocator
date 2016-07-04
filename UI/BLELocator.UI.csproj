@@ -74,7 +74,13 @@
     </Compile>
     <Compile Include="CaptureSessionDetailsViewModel.cs" />
     <Compile Include="LoggedViewModel.cs" />
+    <Compile Include="MapViewModel.cs" />
+    <Compile Include="MapWindow.xaml.cs">
+      <DependentUpon>MapWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReceiverEntryViewModel.cs" />
     <Compile Include="ReceiverViewModel.cs" />
+    <Compile Include="TransmitterEntryViewModel.cs" />
     <Compile Include="TransmitterViewModel.cs" />
     <Page Include="CaptureSessionDetailsView.xaml">
       <SubType>Designer</SubType>
@@ -103,6 +109,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MapWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -146,6 +156,9 @@
   <ItemGroup>
     <Resource Include="Images\Record-Normal-Red-icon.png" />
     <Resource Include="Images\Stop Normal Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Compass-Gold-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

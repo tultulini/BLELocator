@@ -26,6 +26,7 @@
                         <TextBlock Text="Settings" HorizontalAlignment="Center"></TextBlock>
                     </StackPanel>
                 </Button>
+                <Separator></Separator>
                 <Button Command="{Binding ListenToReceiversCommand}"
                         ToolTip="Listen">
                     <StackPanel Orientation="Vertical"
@@ -50,6 +51,16 @@
                                 HorizontalAlignment="Center">
                         <Image Source="Images/Stop Normal Blue.png"></Image>
                         <TextBlock Text="Stop Capture"
+                                   HorizontalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Separator></Separator>
+                 <Button Command="{Binding OpenMapCommand}"
+                        ToolTip="Map">
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Center">
+                        <Image Source="Images/Compass-Gold-icon.png"></Image>
+                        <TextBlock Text="Map"
                                    HorizontalAlignment="Center"></TextBlock>
                     </StackPanel>
                 </Button>

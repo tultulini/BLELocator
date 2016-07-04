@@ -12,19 +12,10 @@ namespace BLELocator.UI
         private string _macAddress;
         private string _holderFirstName;
         private string _holderLastName;
-        private RelayCommand _removeTransmitterCommand;
+        private DateTime _lastSeenTime;
         public BleTransmitter BleTransmitter { get; set; }
-        public event Action<TransmitterViewModel> OnRemove;
 
-        public RelayCommand RemoveTransmitterCommand
-        {
-            get { return _removeTransmitterCommand ?? (_removeTransmitterCommand = new RelayCommand(OnRemoveTransmitter)); }
-        }
-
-        private void OnRemoveTransmitter()
-        {
-            OnRemove(this);
-        }
+        
 
         public void UpdateEntity()
         {
@@ -88,6 +79,16 @@ namespace BLELocator.UI
             {
                 _holderLastName = value;
                 RaisePropertyChanged(() => HolderLastName);
+            }
+        }
+
+        public DateTime LastSeenTime
+        {
+            get { return _lastSeenTime; }
+            set
+            {
+                _lastSeenTime = value; 
+                RaisePropertyChanged(()=>LastSeenTime);
             }
         }
     }

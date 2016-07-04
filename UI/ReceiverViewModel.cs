@@ -4,30 +4,32 @@ using System.Net;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 
 namespace BLELocator.UI
 {
-    public class ReceiverViewModel : ViewModelBase
+    public class ReceiverViewModel : ViewModelBase, IEquatable<ReceiverViewModel>
     {
         private float _positionX;
         private float _positionY;
         private string _ipAddress;
         private int _incomingPort;
         private string _locationName;
-        private RelayCommand _removeReceiverCommand;
+        private bool _isEnabled;
         public BleReceiver BleReceiver { get; private set; }
-        public event Action<ReceiverViewModel> OnRemove;
 
-        public RelayCommand RemoveReceiverCommand
+        public override int GetHashCode()
         {
-            get { return _removeReceiverCommand ?? (_removeReceiverCommand = new RelayCommand(OnRemoveReceiver)); }
-
+            return BleReceiver.GetHashCode();
         }
 
-        private void OnRemoveReceiver()
+        // override object.Equals
+        public override bool Equals(object obj)
         {
-            OnRemove(this);
+            return Equals(obj as ReceiverViewModel);
+        }
+        public bool Equals(ReceiverViewModel other)
+        {
+            return other != null && IPAddress == other.IPAddress;
         }
 
         public ReceiverViewModel(BleReceiver receiver)
@@ -42,7 +44,7 @@ namespace BLELocator.UI
             LocationName = receiver.LocationName;
             PositionX = receiver.Position.X;
             PositionY = receiver.Position.Y;
-
+            IsEnabled = receiver.IsEnabled;
         }
 
         public void UpdateEntity()
@@ -52,7 +54,7 @@ namespace BLELocator.UI
             BleReceiver.IncomingPort = IncomingPort;
             BleReceiver.LocationName = LocationName;
             BleReceiver.Position = new PointF(PositionX, PositionY);
-
+            BleReceiver.IsEnabled = IsEnabled;
         }
         public string IPAddress
         {
@@ -111,6 +113,17 @@ namespace BLELocator.UI
             }
         }
 
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                _isEnabled = value; 
+                RaisePropertyChanged(()=>IsEnabled);
+            }
+        }
+
         public bool IsValid { get { return IPAddress.IsValidIP() && IncomingPort > 0; } }
+      
     }
 }

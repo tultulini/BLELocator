@@ -10,6 +10,7 @@ namespace BLELocator.UI
         private RelayCommand _listenToReceiversCommand;
         private RelayCommand _captureEventsCommand;
         private RelayCommand _stopCaptureEventsCommand;
+        private RelayCommand _openMapCommand;
 
         public RelayCommand EditConfigurationCommand
         {
@@ -35,6 +36,17 @@ namespace BLELocator.UI
         {
             get { return _stopCaptureEventsCommand ?? (_stopCaptureEventsCommand = new RelayCommand(OnStopCapturing)); }
             
+        }
+
+        public RelayCommand OpenMapCommand
+        {
+            get { return _openMapCommand ?? (_openMapCommand = new RelayCommand(OnOpenMap)); }
+        }
+
+        private void OnOpenMap()
+        {
+            
+
         }
 
         private void OnStopCapturing()
