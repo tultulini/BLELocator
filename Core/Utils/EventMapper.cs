@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks.Dataflow;
 using System.Timers;
 using BLELocator.Core.Contracts.Entities;
 
@@ -15,8 +17,10 @@ namespace BLELocator.Core.Utils
         private static TimeSpan _eventLifeSpan = new TimeSpan(0, 0, 0, DefaultEventTimeout);
         private const int ScanInterval = 1000;
         private System.Timers.Timer _scanTimer;
+        private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
         public EventMapper(List<BleReceiver>receivers, List<BleTransmitter> transmitters )
         {
+            _eventGroupHandler = new ActionBlock<List<SignalEventDetails>>(deg => HandleEventGroup(deg), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
             _eventsByReceiver = new Dictionary<BleReceiver, Dictionary<string, SignalEventDetails>>(receivers.Count);
             _monitoredReceivers = receivers;
             _monitoredTransmitters = transmitters;
@@ -29,13 +33,25 @@ namespace BLELocator.Core.Utils
                 {
                     if(receiverTransmitters.ContainsKey(t.TransmitterName))
                         return;
-                    receiverTransmitters.Add(t.TransmitterName, new SignalEventDetails());
+                    receiverTransmitters.Add(t.TransmitterName, new SignalEventDetails{Transmitter = t});
                 });
                 _eventsByReceiver.Add(bleReceiver, receiverTransmitters);
             }
             _scanTimer = new Timer(ScanInterval);
             _scanTimer.Elapsed += ScanIntervalElapsed;
         }
+
+        private void HandleEventGroup(List<SignalEventDetails> eventGroup)
+        {
+            var orderedGroup= eventGroup.OrderByDescending(e => e.Rssi);
+
+            foreach (var signalEventDetailse in orderedGroup)
+            {
+                signalEventDetailse.Distance = _signalToDistanceConverter.GetDistance(signalEventDetailse.Rssi);
+                
+            }
+        }
+
         private void ScanIntervalElapsed(object sender, ElapsedEventArgs e)
         {
             _scanTimer.Stop();
@@ -51,6 +67,9 @@ namespace BLELocator.Core.Utils
                         relevantSignals.Add(signalDetails);
                     }
                 }
+                if(relevantSignals.IsNullOrEmpty())
+                    continue;
+                _eventGroupHandler.Post(relevantSignals);
             }
 
         }
@@ -64,7 +83,7 @@ namespace BLELocator.Core.Utils
                 return;
             eventDetails.Rssi = deviceDiscoveryEvent.Rssi;
             eventDetails.TimeStamp = deviceDiscoveryEvent.TimeStamp;
-            eventDetails.Distance = _signalToDistanceConverter.GetDistance(deviceDiscoveryEvent.Rssi);
+            //eventDetails.Distance = _signalToDistanceConverter.GetDistance(deviceDiscoveryEvent.Rssi);
         }
     }
 }

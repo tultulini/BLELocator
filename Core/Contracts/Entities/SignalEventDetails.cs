@@ -13,7 +13,7 @@ namespace BLELocator.Core.Contracts.Entities
         public DateTime TimeStamp { get; set; }
         public int Rssi { get; set; }
         public float Distance { get; set; }
-
+        public BleTransmitter Transmitter { get; set; }
         public SignalEventDetails Clone()
         {
             return (SignalEventDetails) MemberwiseClone();
