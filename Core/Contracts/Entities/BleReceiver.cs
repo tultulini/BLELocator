@@ -26,7 +26,7 @@ namespace BLELocator.Core.Contracts.Entities
 
         public override int GetHashCode()
         {
-            return IPAddress.GetHashCode();
+            return IPAddress == null ? -1 : IPAddress.GetHashCode();
         }
 
         public override bool Equals(object obj)

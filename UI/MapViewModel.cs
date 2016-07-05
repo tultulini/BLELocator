@@ -32,7 +32,7 @@ namespace BLELocator.UI
                     receiverTransmitters.Add(bleTransmitter.Value.TransmitterName, null);
                     Transmitters.Add(new TransmitterViewModel(bleTransmitter.Value));
                 }
-                _eventsByReceiver.Add(new ReceiverViewModel(bleReceiver.Value), receiverTransmitters);
+                //_eventsByReceiver.Add(new ReceiverViewModel(bleReceiver.Value), receiverTransmitters);
             }
           
 

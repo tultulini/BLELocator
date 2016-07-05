@@ -14,6 +14,7 @@ namespace BLELocator.Core.Contracts.Entities
         public int Rssi { get; set; }
         public float Distance { get; set; }
         public BleTransmitter Transmitter { get; set; }
+        public BleReceiver BleReceiver { get; set; }
         public SignalEventDetails Clone()
         {
             return (SignalEventDetails) MemberwiseClone();
