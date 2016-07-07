@@ -2,7 +2,7 @@
 using BLELocator.Core.Contracts.Entities;
 using GalaSoft.MvvmLight.Command;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class ReceiverEntryViewModel : ReceiverViewModel
     {

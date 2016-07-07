@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Threading.Tasks;
+using BLELocator.UI.Models;
+using BLELocator.UI.Views;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Win32;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class BleLocatorViewModel :LoggedViewModel
     {
@@ -11,6 +14,7 @@ namespace BLELocator.UI
         private RelayCommand _captureEventsCommand;
         private RelayCommand _stopCaptureEventsCommand;
         private RelayCommand _openMapCommand;
+        private RelayCommand _replayCaptureCommand;
 
         public RelayCommand EditConfigurationCommand
         {
@@ -36,6 +40,23 @@ namespace BLELocator.UI
         {
             get { return _stopCaptureEventsCommand ?? (_stopCaptureEventsCommand = new RelayCommand(OnStopCapturing)); }
             
+        }
+
+        public RelayCommand ReplayCaptureCommand
+        {
+            get { return _replayCaptureCommand ?? (_replayCaptureCommand = new RelayCommand(OnReplayCapture)); }
+        }
+
+        private void OnReplayCapture()
+        {
+            
+            var fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Json Files (*.json)|*.json";
+            var res = fileDialog.ShowDialog();
+            if (res.HasValue && res.Value)
+            {
+                Task.Run(() => _model.ReplayCapture(fileDialog.FileName));
+            }
         }
 
         public RelayCommand OpenMapCommand

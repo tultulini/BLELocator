@@ -14,12 +14,13 @@ namespace BLELocator.Core.Utils
         private List<BleTransmitter> _monitoredTransmitters;
         private List<BleReceiver> _monitoredReceivers;
         private readonly SignalToDistanceConverterBase _signalToDistanceConverter = new LinearSignalToDistanceConverter(new LineDetails { Slope = -.2f, Offset = -6 });
-        public const int DefaultEventTimeout = 2;
-        private static TimeSpan _eventLifeSpan = new TimeSpan(0, 0, 0, DefaultEventTimeout);
+        public const int DefaultEventTimeoutMsec = 1200;
+        private static TimeSpan _eventLifeSpan = new TimeSpan(0, 0, 0, 0, DefaultEventTimeoutMsec);
         private const int ScanInterval = 1000;
-        private System.Timers.Timer _scanTimer;
+        private Timer _scanTimer;
         private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
         private const double HalfPi = Math.PI / 2.0;
+        public event Action<BleTransmitter> TransmitterPositionDiscovered;
         public EventMapper(List<BleReceiver> receivers, List<BleTransmitter> transmitters)
         {
             _eventGroupHandler = new ActionBlock<List<SignalEventDetails>>(deg => HandleEventGroup(deg), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
@@ -46,6 +47,8 @@ namespace BLELocator.Core.Utils
 
         private void HandleEventGroup(List<SignalEventDetails> eventGroup)
         {
+            if(eventGroup.IsNullOrEmpty())
+                return;
             var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
             var groupCount = orderedGroup.Count;
             var detectionMirrors = new List<Tuple<PointF, PointF>>(groupCount);
@@ -62,18 +65,35 @@ namespace BLELocator.Core.Utils
                 detectionMirrors.Add(mirrors);
                 totalSignalWeight += signalEventDetails.Rssi;
             }
-            PointF? eventPosition;
+            PointF? eventPosition=null;
             //get first mirror closest to leading sensor then advance to each mirror closest to event position
-            for (int i = 0; i < groupCount-1; i++)
+            var transmitter = eventGroup.First().Transmitter;
+            for (int i = 1; i < groupCount - 1; i++)
             {
-                var currentMirrors = detectionMirrors[i];
                 var signalEventDetails = orderedGroup[i];
                 var nextMirrors = detectionMirrors[i + 1];
-                var receiverPosition = signalEventDetails.BleReceiver.Position;
-                var selectedNextPoint = GetDistance(nextMirrors.Item1, receiverPosition) <
-                                        GetDistance(nextMirrors.Item2, receiverPosition)
+                PointF refPosition;
+                if (eventPosition.HasValue)
+                    refPosition = eventPosition.Value;
+                else
+                {
+                    refPosition = signalEventDetails.BleReceiver.Position;
+                    
+                }
+                var selectedNextPoint = GetDistance(nextMirrors.Item1, refPosition) <
+                                        GetDistance(nextMirrors.Item2, refPosition)
                     ? nextMirrors.Item1
                     : nextMirrors.Item2;
+
+                if (!eventPosition.HasValue)
+                {
+                    var currentMirrors = detectionMirrors[i];
+                    refPosition = GetDistance(currentMirrors.Item1, selectedNextPoint) <
+                                        GetDistance(currentMirrors.Item2, selectedNextPoint)
+                    ? currentMirrors.Item1
+                    : currentMirrors.Item2;
+                }
+                eventPosition = CalculatePointInBetween(refPosition, selectedNextPoint);
                 //var distance1_1 = GetDistance(currentMirrors.Item1, nextMirrors.Item1);
                 //var distance2_1 = GetDistance(currentMirrors.Item2, nextMirrors.Item1);
                 //var distance1_2 = GetDistance(currentMirrors.Item1, nextMirrors.Item2);
@@ -87,6 +107,15 @@ namespace BLELocator.Core.Utils
 
                 //}
             }
+            if(!eventPosition.HasValue)
+                return;
+            transmitter.Position = eventPosition.Value;
+            TransmitterPositionDiscovered(transmitter);
+        }
+
+        private PointF CalculatePointInBetween(PointF refPosition, PointF selectedNextPoint)
+        {
+            return new PointF((refPosition.X + selectedNextPoint.X) / 2, (refPosition.Y + selectedNextPoint.Y) / 2);
         }
 
         private double GetAngle(PointF positionA, PointF positionB)

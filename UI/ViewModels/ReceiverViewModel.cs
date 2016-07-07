@@ -5,7 +5,7 @@ using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using GalaSoft.MvvmLight;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class ReceiverViewModel : ViewModelBase, IEquatable<ReceiverViewModel>
     {

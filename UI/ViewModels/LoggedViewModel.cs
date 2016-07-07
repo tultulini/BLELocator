@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public abstract class LoggedViewModel : GalaSoft.MvvmLight.ViewModelBase
     {

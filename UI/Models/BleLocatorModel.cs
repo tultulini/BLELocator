@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
-using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using BLELocator.Core;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using Newtonsoft.Json;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.Models
 {
     public class BleLocatorModel
     {
@@ -221,6 +221,47 @@ namespace BLELocator.UI
                     OnLogMessage(string.Format("{0} is connected", bleReceiver.IPAddress));
                     
                 }
+            }
+        }
+
+        public async Task ReplayCapture(string fileName)
+        {
+            string json;
+            if (fileName.IsNullOrEmpty() || !File.Exists(fileName))
+            {
+                OnLogMessage(string.Format("{0} file doesn't exist=> aborting replay", fileName));
+                return;
+            }
+            using (var reader = new StreamReader(File.OpenRead(fileName)))
+            {
+                json = reader.ReadToEnd();
+            }
+            if (json.IsNullOrEmpty())
+            {
+                OnLogMessage(string.Format("{0} is empty => aborting replay", fileName));
+                return;
+            }
+            var captureSession = JsonConvert.DeserializeObject<EventCaptureSession>(json);
+            var discoveryEvents = new List<DeviceDiscoveryEvent>();
+            foreach (var capturedEvents in captureSession.CapturedEvents)
+            {
+                discoveryEvents.AddRange(capturedEvents.Value);
+            }
+            discoveryEvents = discoveryEvents.OrderBy(x => x.TimeStamp).ToList();
+            var timeDiffs = new TimeSpan[discoveryEvents.Count];
+            for (int i = 0; i < discoveryEvents.Count-1; i++)
+            {
+                timeDiffs[i] = discoveryEvents[i + 1].TimeStamp - discoveryEvents[i].TimeStamp;
+            }
+            for (int i = 0; i < discoveryEvents.Count - 1; i++)
+            {
+                if (i > 0)
+                {
+                    await Task.Delay(timeDiffs[i - 1]);
+                }
+                var discoveryEvent = discoveryEvents[i];
+                discoveryEvent.TimeStamp = DateTime.Now;
+                OnDeviceDiscovery(discoveryEvent);
             }
         }
     }

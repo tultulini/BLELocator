@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class CaptureSessionDetailsViewModel : ViewModelBase
     {

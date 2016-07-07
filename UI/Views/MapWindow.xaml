@@ -1,4 +1,4 @@
-﻿<Window x:Class="BLELocator.UI.MapWindow"
+﻿<Window x:Class="BLELocator.UI.Views.MapWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowState="Maximized"

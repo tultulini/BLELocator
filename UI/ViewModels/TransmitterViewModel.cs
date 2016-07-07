@@ -2,9 +2,8 @@
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class TransmitterViewModel:ViewModelBase
     {

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.Converters
 {
     public class BooleanToVisibilityConverter :IValueConverter
     {

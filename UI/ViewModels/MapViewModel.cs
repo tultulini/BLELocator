@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Timers;
+using System.Linq;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
+using BLELocator.UI.Models;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class MapViewModel : LoggedViewModel
     {
@@ -13,16 +13,19 @@ namespace BLELocator.UI
 
         
         public ObservableCollection<TransmitterViewModel> Transmitters { get; set; }
+        private  EventMapper _eventMapper;
         public MapViewModel()
         {
 
             Init();
+            
         }
 
         private void Init()
         {
             _model = BleLocatorModel.Instance;
             var config = _model.BleSystemConfiguration;
+            _eventMapper = new EventMapper(config.BleReceivers.Values.ToList(), config.BleTransmitters.Values.ToList());
             foreach (var bleReceiver in config.BleReceivers)
             {
                 var receiverTransmitters = new Dictionary<string, DeviceDiscoveryEvent>();

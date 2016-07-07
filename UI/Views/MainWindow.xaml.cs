@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -2,9 +2,10 @@
 using System.Collections.ObjectModel;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
+using BLELocator.UI.Models;
 using GalaSoft.MvvmLight.Command;
 
-namespace BLELocator.UI
+namespace BLELocator.UI.ViewModels
 {
     public class ConfigViewModel : LoggedViewModel
     {

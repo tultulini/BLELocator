@@ -68,29 +68,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BooleanToVisibilityConverter.cs" />
-    <Compile Include="CaptureSessionDetailsView.xaml.cs">
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Views\CaptureSessionDetailsView.xaml.cs">
       <DependentUpon>CaptureSessionDetailsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CaptureSessionDetailsViewModel.cs" />
-    <Compile Include="LoggedViewModel.cs" />
-    <Compile Include="MapViewModel.cs" />
-    <Compile Include="MapWindow.xaml.cs">
+    <Compile Include="ViewModels\CaptureSessionDetailsViewModel.cs" />
+    <Compile Include="ViewModels\LoggedViewModel.cs" />
+    <Compile Include="ViewModels\MapViewModel.cs" />
+    <Compile Include="Views\MapWindow.xaml.cs">
       <DependentUpon>MapWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReceiverEntryViewModel.cs" />
-    <Compile Include="ReceiverViewModel.cs" />
-    <Compile Include="TransmitterEntryViewModel.cs" />
-    <Compile Include="TransmitterViewModel.cs" />
-    <Page Include="CaptureSessionDetailsView.xaml">
+    <Compile Include="ViewModels\ReceiverEntryViewModel.cs" />
+    <Compile Include="ViewModels\ReceiverViewModel.cs" />
+    <Compile Include="ViewModels\TransmitterEntryViewModel.cs" />
+    <Compile Include="ViewModels\TransmitterViewModel.cs" />
+    <Page Include="Views\CaptureSessionDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ConfigWindow.xaml">
+    <Page Include="Views\ConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -98,18 +98,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BleLocatorModel.cs" />
-    <Compile Include="BleLocatorViewModel.cs" />
+    <Compile Include="Models\BleLocatorModel.cs" />
+    <Compile Include="ViewModels\BleLocatorViewModel.cs" />
     <Compile Include="BleSystemConfiguration.cs" />
-    <Compile Include="ConfigViewModel.cs" />
-    <Compile Include="ConfigWindow.xaml.cs">
+    <Compile Include="ViewModels\ConfigViewModel.cs" />
+    <Compile Include="Views\ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MapWindow.xaml">
+    <Page Include="Views\MapWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -159,6 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Compass-Gold-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\replay-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
