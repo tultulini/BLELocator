@@ -6,13 +6,14 @@
         xmlns:converters="clr-namespace:BLELocator.UI.Converters"
         Title="ConfigWindow"
         SizeToContent="WidthAndHeight"
-        Width="300"
+        Width="auto"
         FontSize="18"
         >
     <Window.DataContext>
         <viewModels:ConfigViewModel></viewModels:ConfigViewModel>
     </Window.DataContext>
     <Window.Resources>
+        <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"></converters:ColorToBrushConverter>
         <Style TargetType="TextBox">
             <Setter Property="Width"
                     Value="150"></Setter>
@@ -20,6 +21,17 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </Window.Resources>
     <StackPanel Orientation="Vertical">
+        <GroupBox Header="Keep alive">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding KeepCheckingIsAlive}" VerticalAlignment="Center"
+                          Content="Keep Checking"
+                          Margin="10"></CheckBox>
+                <Label Content="Interval [msec]: "
+                       VerticalAlignment="Center"
+                       Margin="10"></Label>
+                <TextBox VerticalAlignment="Center" Text="{Binding KeepAliveInterval}" Margin="10" Width="100"></TextBox>
+            </StackPanel>
+        </GroupBox>
         <GroupBox Header="Transmitter Tags">
             <StackPanel Orientation="Vertical">
                 <ListBox ItemsSource="{Binding Transmitters}">
@@ -87,12 +99,28 @@
                                 <TextBox Grid.Row="0"
                                          Grid.Column="16"
                                          Text="{Binding HolderLastName, Mode=TwoWay}"></TextBox>
+                                <TextBlock Grid.Row="0" Grid.Column="18" Text="Colour"></TextBlock>
+                                <ComboBox Grid.Row="0"
+                                          Grid.Column="20"
+                                          ItemsSource="{Binding AvailableColors}" SelectedItem="{Binding ColorCode}">
+                                    <ComboBox.ItemTemplate>
+                                        
+                                        <DataTemplate>
+                                            <Rectangle Width="16"
+                                                       Height="16"
+                                                       HorizontalAlignment="Center"
+                                                       Fill="{Binding Converter={StaticResource ColorToBrushConverter}}"
+                                                       Stroke="Black"
+                                                       Margin="0 1 0 1" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <Button  Grid.Row="0"
-                                         Grid.Column="18"
+                                         Grid.Column="22"
                                          Content="-"
                                          Command="{Binding RemoveTransmitterCommand}"></Button>
                                 <Rectangle Grid.Row="0"
-                                           Grid.Column="20"
+                                           Grid.Column="24"
                                            Fill="Red" Width="15" Height="15" Visibility="{Binding IsValid, Converter={StaticResource BooleanToVisibilityConverter}}"></Rectangle>
                             </Grid>
                         </DataTemplate>

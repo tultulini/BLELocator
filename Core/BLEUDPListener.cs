@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace BLELocator.Core
         public event Action<BleConnectionStateMessage> OnConnectionStateChanged;
         private bool _keepReading;
         private readonly BleReceiver _receiver;
+        public bool IsListening { get; set; }
         public BLEUdpListener(BleReceiver   receiver)
         {
             if(receiver == null)
@@ -37,6 +39,7 @@ namespace BLELocator.Core
         public void StartListener()
         {
             _keepReading = true;
+            IsListening = false;
             try
             {
                 if (_listener != null)
@@ -62,6 +65,7 @@ namespace BLELocator.Core
                 return;
 
             }
+            IsListening = true;
             if (OnConnectionStateChanged != null)
             {
                 var connectionStateMessage = new BleConnectionStateMessage
@@ -117,6 +121,7 @@ namespace BLELocator.Core
         }
         public void Stop()
         {
+            IsListening = false;
             _keepReading = false;
             if (_listener == null)
                 return;

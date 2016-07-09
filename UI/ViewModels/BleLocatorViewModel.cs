@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BLELocator.Core.Contracts.Enums;
 using BLELocator.UI.Models;
 using BLELocator.UI.Views;
 using GalaSoft.MvvmLight.Command;
@@ -15,6 +16,7 @@ namespace BLELocator.UI.ViewModels
         private RelayCommand _stopCaptureEventsCommand;
         private RelayCommand _openMapCommand;
         private RelayCommand _replayCaptureCommand;
+        private bool _isListeningToReceivers;
 
         public RelayCommand EditConfigurationCommand
         {
@@ -64,10 +66,27 @@ namespace BLELocator.UI.ViewModels
             get { return _openMapCommand ?? (_openMapCommand = new RelayCommand(OnOpenMap)); }
         }
 
+        public bool IsListeningToReceivers
+        {
+            get
+            {
+                _isListeningToReceivers = _model.ConnectedToListeners;
+                return _isListeningToReceivers;
+            }
+            set
+            {
+                _isListeningToReceivers = value;
+                RaisePropertyChanged(() => IsListeningToReceivers);
+            }
+        }
+
         private void OnOpenMap()
         {
-            
 
+            //var mapVM = new MapViewModel();
+            var window = new MapWindow(_model.BleSystemConfiguration);
+            //window.DataContext = mapVM;
+            window.ShowDialog();
         }
 
         private void OnStopCapturing()
@@ -81,14 +100,24 @@ namespace BLELocator.UI.ViewModels
 
         private void OnListenToReceivers()
         {
-            
-            _model.Connect();
+            if (_model.ConnectedToListeners)
+            {
+                _model.Disconnect();
+            }
+            else
+            {
+                _model.Connect(); 
+
+            }
         }
 
         private void OnEditConfiguration()
         {
             var window = new ConfigWindow();
-            window.DataContext = new ConfigViewModel();
+            var configVM = new ConfigViewModel();
+            
+            window.DataContext = configVM;
+            configVM.OnSaved += window.Close;
             window.ShowDialog();
         }
 
@@ -96,7 +125,13 @@ namespace BLELocator.UI.ViewModels
         {
             _model = BleLocatorModel.Instance;
             _model.OnLogMessage += InsertMessage;
+            _model.OnConnectionStateChanged += OnConnectionStateChanged;
 
+        }
+
+        private void OnConnectionStateChanged(BleConnectionState obj)
+        {
+            RaisePropertyChanged(()=>IsListeningToReceivers);
         }
     }
 }

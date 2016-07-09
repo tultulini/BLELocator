@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using BLELocator.Core;
 using BLELocator.Core.Contracts.Entities;
+using BLELocator.Core.Contracts.Enums;
 using BLELocator.Core.Utils;
 using Newtonsoft.Json;
 
@@ -19,7 +20,7 @@ namespace BLELocator.UI.Models
     {
         public List<BLEUdpListener> BleUdpListeners { get; set; }
         private EventCaptureSession _capturedEventsSession;
-        public event Action<BleReceiver,ConnectionState> OnConnectionStateChanged;
+        public event Action<BleConnectionState> OnConnectionStateChanged;
         private static BleLocatorModel _instance;
         private readonly static object _instanceLock = new object();
 
@@ -32,7 +33,7 @@ namespace BLELocator.UI.Models
 
         private object _captureLock = new object();
         public event Action<string> OnLogMessage;
-
+        
         public static BleLocatorModel Instance
         {
             get
@@ -115,9 +116,21 @@ namespace BLELocator.UI.Models
                 BleUdpListeners.Add(listener);
                 listener.StartListener();
             }
-            
+            if (OnConnectionStateChanged != null)
+                OnConnectionStateChanged(ConnectionState);
         }
 
+        public bool ConnectedToListeners
+        {
+            get { return BleUdpListeners.HasSomething() && BleUdpListeners.Any(r => r.IsListening); }
+        }
+
+        public BleConnectionState ConnectionState { get
+        {
+            return ConnectedToListeners
+                ? BleConnectionState.Connected
+                : BleConnectionState.Disconnected;
+        }}
         public void Disconnect()
         {
             if (BleUdpListeners.HasSomething())
@@ -129,6 +142,8 @@ namespace BLELocator.UI.Models
                 }
                 BleUdpListeners.Clear();
             }
+            if (OnConnectionStateChanged != null)
+                OnConnectionStateChanged(ConnectionState);
         }
 
         public void CapturingEventsStart()

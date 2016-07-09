@@ -21,6 +21,7 @@ namespace BLELocator.UI.ViewModels
             
         }
 
+        
         private void Init()
         {
             _model = BleLocatorModel.Instance;

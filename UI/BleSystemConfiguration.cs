@@ -16,5 +16,8 @@ namespace BLELocator.UI
         public Dictionary<BleReceiver, BleReceiver> BleReceivers { get; set; }
         [JsonConverter(typeof(JsonConverterDictionary<string, BleTransmitter>))]
         public Dictionary<string, BleTransmitter> BleTransmitters { get; set; }
+
+        public bool KeepCheckingIsAlive { get; set; }
+        public int KeepAliveInterval { get; set; }
     }
 }

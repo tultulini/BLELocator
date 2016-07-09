@@ -69,6 +69,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Utils\ColorExtensions.cs" />
     <Compile Include="Views\CaptureSessionDetailsView.xaml.cs">
       <DependentUpon>CaptureSessionDetailsView.xaml</DependentUpon>
     </Compile>

@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Drawing;
+using System.Windows.Media;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using GalaSoft.MvvmLight;
+using Brush = System.Windows.Media.Brush;
+using MediaColor = System.Windows.Media.Color;
 
 namespace BLELocator.UI.ViewModels
 {
@@ -12,6 +16,7 @@ namespace BLELocator.UI.ViewModels
         private string _holderFirstName;
         private string _holderLastName;
         private DateTime _lastSeenTime;
+        private MediaColor _colorCode;
         public BleTransmitter BleTransmitter { get; set; }
 
         
@@ -23,6 +28,7 @@ namespace BLELocator.UI.ViewModels
             BleTransmitter.TagHolder.FirstName = HolderFirstName;
             BleTransmitter.MacAddress = MacAddress;
             BleTransmitter.TagHolder.LastName = HolderLastName;
+            BleTransmitter.ColorCode = System.Drawing.Color.FromArgb(ColorCode.A, ColorCode.R, ColorCode.G, ColorCode.B);
         }
         public TransmitterViewModel(BleTransmitter transmitter)
         {
@@ -33,6 +39,9 @@ namespace BLELocator.UI.ViewModels
                 transmitter.TagHolder = new TagHolder();
             HolderFirstName = transmitter.TagHolder.FirstName;
             HolderLastName= transmitter.TagHolder.LastName;
+            ColorCode =
+                (System.Windows.Media.Color.FromArgb(transmitter.ColorCode.A, transmitter.ColorCode.R,
+                    transmitter.ColorCode.G, transmitter.ColorCode.B));
         }
         public string TransmitterName
         {
@@ -88,6 +97,16 @@ namespace BLELocator.UI.ViewModels
             {
                 _lastSeenTime = value; 
                 RaisePropertyChanged(()=>LastSeenTime);
+            }
+        }
+
+        public MediaColor ColorCode
+        {
+            get { return _colorCode; }
+            set
+            {
+                _colorCode = value;
+                RaisePropertyChanged(() => ColorCode);
             }
         }
     }

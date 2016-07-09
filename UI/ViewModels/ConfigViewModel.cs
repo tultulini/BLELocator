@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
@@ -12,6 +13,10 @@ namespace BLELocator.UI.ViewModels
         private RelayCommand _addReceiverCommand;
         private RelayCommand _addTransmitterCommand;
         private RelayCommand _saveConfigurationCommnand;
+        private bool _keepCheckingIsAlive;
+        private int _keepAliveInterval;
+        private ObservableCollection<TransmitterEntryViewModel> _transmitters;
+        public event Action OnSaved;
 
         public ConfigViewModel()
         {
@@ -23,6 +28,7 @@ namespace BLELocator.UI.ViewModels
             InsertMessage("Loaded");
         }
 
+        
         private void LoadExistingConfiguration()
         {
             var config = BleLocatorModel.Instance.BleSystemConfiguration;
@@ -58,7 +64,38 @@ namespace BLELocator.UI.ViewModels
             }
         }
 
-        public ObservableCollection<TransmitterEntryViewModel> Transmitters { get; set; }
+        public ObservableCollection<TransmitterEntryViewModel> Transmitters
+        {
+            get { return _transmitters; }
+            set
+            {
+                _transmitters = value; 
+                RaisePropertyChanged(()=>Transmitters);
+            }
+        }
+
+        public bool KeepCheckingIsAlive
+        {
+            get { return _keepCheckingIsAlive; }
+            set
+            {
+                _keepCheckingIsAlive = value; 
+                RaisePropertyChanged(()=>KeepCheckingIsAlive);
+            }
+        }
+
+        public int KeepAliveInterval
+        {
+            get { return _keepAliveInterval; }
+            set
+            {
+                _keepAliveInterval = value;
+                RaisePropertyChanged(() => KeepAliveInterval);
+                if (KeepAliveInterval <= 0)
+                    KeepCheckingIsAlive = false;
+            }
+        }
+
         public ObservableCollection<ReceiverViewModel> Receivers { get; set; }
 
         public RelayCommand AddReceiverCommand
@@ -73,6 +110,11 @@ namespace BLELocator.UI.ViewModels
 
         private bool ValidateConfiguration()
         {
+            if (KeepCheckingIsAlive && KeepAliveInterval < 5000)
+            {
+                InsertMessage("Keep alive needs to be at least 5000 msec");
+                return false;
+            }
             var ips = new HashSet<string>();
             var incomingPorts = new HashSet<int>();
             foreach (var receiverViewModel in Receivers)
@@ -148,6 +190,9 @@ namespace BLELocator.UI.ViewModels
             }
             model.SaveConfiguration();
             InsertMessage("Configuration Saved");
+            if (OnSaved != null)
+                OnSaved();
+
         }
 
         private void OnAddReceiver()

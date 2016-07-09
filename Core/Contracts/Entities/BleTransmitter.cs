@@ -9,5 +9,6 @@ namespace BLELocator.Core.Contracts.Entities
         public string MacAddress { get; set; }
         public PointF Position { get; set; }
         public float ErrorRadius { get; set; }
+        public Color ColorCode{ get; set; }
     }
 }

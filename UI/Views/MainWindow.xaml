@@ -17,13 +17,22 @@
         <Style x:Key="SeparatorStyle" TargetType="{x:Type Separator}">
             <Setter Property="Margin"
                     Value="20 0 20 0"></Setter>
+            <Setter Property="Background"
+                    Value="DarkSlateBlue"></Setter>
+            <Setter Property="Width"
+                    Value="2"></Setter>
+            
+            
         </Style>
     </Window.Resources>
     <DockPanel>
-        
-        <ToolBarTray DockPanel.Dock="Top" VerticalAlignment="Top" >
-         
-            <ToolBar>
+
+        <ToolBarTray DockPanel.Dock="Top"
+                     VerticalAlignment="Top"
+                     Background="LightSteelBlue" >
+
+            <ToolBar Background="LightSteelBlue"
+                     Margin="0,0,-23,0">
                 <Button 
                         Command="{Binding EditConfigurationCommand}"
                         ToolTip="Settings">
@@ -33,7 +42,7 @@
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource SeparatorStyle}"></Separator>
-                <Button Command="{Binding ListenToReceiversCommand}"
+                <ToggleButton IsChecked="{Binding IsListeningToReceivers}" Command="{Binding ListenToReceiversCommand}"
                         ToolTip="Listen">
                     <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Center">
@@ -41,7 +50,7 @@
                         <TextBlock Text="Listen"
                                    HorizontalAlignment="Center"></TextBlock>
                     </StackPanel>
-                </Button>
+                </ToggleButton>
                 <Button Command="{Binding CaptureEventsCommand}"
                         ToolTip="Capture">
                     <StackPanel Orientation="Vertical"
