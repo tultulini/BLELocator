@@ -1,9 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Contracts.Enums;
+using BLELocator.Core.Utils;
 using BLELocator.UI.Models;
 using BLELocator.UI.Views;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
 
 namespace BLELocator.UI.ViewModels
 {
@@ -17,6 +28,7 @@ namespace BLELocator.UI.ViewModels
         private RelayCommand _openMapCommand;
         private RelayCommand _replayCaptureCommand;
         private bool _isListeningToReceivers;
+        private EventMapper _eventMapper;
 
         public RelayCommand EditConfigurationCommand
         {
@@ -51,13 +63,58 @@ namespace BLELocator.UI.ViewModels
 
         private void OnReplayCapture()
         {
-            
-            var fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Json Files (*.json)|*.json";
-            var res = fileDialog.ShowDialog();
-            if (res.HasValue && res.Value)
+            var dialog = new CommonOpenFileDialog
             {
-                Task.Run(() => _model.ReplayCapture(fileDialog.FileName));
+                IsFolderPicker = true,
+                Multiselect = false
+            };
+
+            
+            //var fileDialog = new OpenFileDialog();
+            //fileDialog.Filter = "Json Files (*.json)|*.json";
+            //dialog.Filters.Add(new CommonFileDialogFilter("Json files",".json"));
+                
+            var res = dialog.ShowDialog();
+            if (res == CommonFileDialogResult.Ok)
+            {
+                var dir = dialog.FileName;
+                var jsonFiles = Directory.GetFiles(dir, "*.json");
+                var sessions = new List<EventCaptureSession>();
+                foreach (var jsonFile in jsonFiles)
+                {
+                    string json;
+                    using (var reader = new StreamReader(File.OpenRead(jsonFile)))
+                    {
+                        json = reader.ReadToEnd();
+                    }
+                    try
+                    {
+                        var session = JsonConvert.DeserializeObject<EventCaptureSession>(json);
+                        sessions.Add(session);
+                    }
+                    catch (Exception)
+                    {
+                        
+                        
+                    }
+                }
+                if (sessions.IsNullOrEmpty())
+                {
+                    InsertMessage("Couldn't load any event sessions");
+                    return;
+                }
+                var capturePickerVm = new CapturePickerViewModel
+                {
+                    CaptureSessions = new ObservableCollection<EventCaptureSession>(sessions)
+                };
+                var window = new CapturePickerWindow
+                {
+                    DataContext = capturePickerVm
+                };
+                capturePickerVm.OnOk += window.Close;
+                var pickResult = window.ShowDialog();
+                if (pickResult.HasValue && pickResult.Value && capturePickerVm.SelectedSession!=null)
+                    Task.Run(() => _model.PlaySession(capturePickerVm.SelectedSession));
             }
         }
 
@@ -85,8 +142,11 @@ namespace BLELocator.UI.ViewModels
 
             //var mapVM = new MapViewModel();
             var window = new MapWindow(_model.BleSystemConfiguration);
+            _eventMapper.TransmitterSignalDiscovered +=
+                s => window.HandleDiscoveryEvent(s.BleReceiver, s.Transmitter.TransmitterName, s.Distance);
+            _eventMapper.TransmitterPositionDiscovered += window.HandleTransmitterLocationEvent;
             //window.DataContext = mapVM;
-            window.ShowDialog();
+            window.Show();
         }
 
         private void OnStopCapturing()
@@ -126,7 +186,10 @@ namespace BLELocator.UI.ViewModels
             _model = BleLocatorModel.Instance;
             _model.OnLogMessage += InsertMessage;
             _model.OnConnectionStateChanged += OnConnectionStateChanged;
+            _eventMapper = new EventMapper(_model.BleSystemConfiguration.BleReceivers.Values.ToList(),
+                _model.BleSystemConfiguration.BleTransmitters.Values.ToList());
 
+            _model.OnRegisteredTransmitterEvent += e => _eventMapper.HandleDiscoveryEvent(e);
         }
 
         private void OnConnectionStateChanged(BleConnectionState obj)

@@ -13,6 +13,12 @@ namespace BLELocator.Core.Contracts.Entities
         public int IncomingPort { get; set; }
         public string LocationName { get; set; }
         public PointF Position { get; set; }
+
+        public BleReceiver()
+        {
+            SignalPassLowerBound = -100;
+            SignalPassUpperBound = 0;
+        }
         public bool Equals(BleReceiver other)
         {
             return other != null && Equals(IPAddress, other.IPAddress);
@@ -35,5 +41,7 @@ namespace BLELocator.Core.Contracts.Entities
         }
 
         public bool IsEnabled { get; set; }
+        public int SignalPassUpperBound { get; set; }
+        public int SignalPassLowerBound { get; set; }
     }
 }

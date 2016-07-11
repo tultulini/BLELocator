@@ -41,6 +41,12 @@
     <Reference Include="GalaSoft.MvvmLight.Extras">
       <HintPath>..\Deployment\3rd Party\MVVMLight\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>..\Deployment\3rd Party\WindowsAPICodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>..\Deployment\3rd Party\WindowsAPICodePack\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Deployment\3rd Party\JsonNet\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -71,6 +77,11 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToBrushConverter.cs" />
     <Compile Include="Utils\ColorExtensions.cs" />
+    <Compile Include="Utils\WPFMethodInvoker.cs" />
+    <Compile Include="ViewModels\CapturePickerViewModel.cs" />
+    <Compile Include="Views\CapturePickerWindow.xaml.cs">
+      <DependentUpon>CapturePickerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CaptureSessionDetailsView.xaml.cs">
       <DependentUpon>CaptureSessionDetailsView.xaml</DependentUpon>
     </Compile>
@@ -84,6 +95,10 @@
     <Compile Include="ViewModels\ReceiverViewModel.cs" />
     <Compile Include="ViewModels\TransmitterEntryViewModel.cs" />
     <Compile Include="ViewModels\TransmitterViewModel.cs" />
+    <Page Include="Views\CapturePickerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CaptureSessionDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

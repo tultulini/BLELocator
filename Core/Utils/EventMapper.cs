@@ -21,6 +21,7 @@ namespace BLELocator.Core.Utils
         private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
         private const double HalfPi = Math.PI / 2.0;
         public event Action<BleTransmitter> TransmitterPositionDiscovered;
+        public event Action<SignalEventDetails> TransmitterSignalDiscovered;
         public EventMapper(List<BleReceiver> receivers, List<BleTransmitter> transmitters)
         {
             _eventGroupHandler = new ActionBlock<List<SignalEventDetails>>(deg => HandleEventGroup(deg), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
@@ -43,14 +44,35 @@ namespace BLELocator.Core.Utils
             }
             _scanTimer = new Timer(ScanInterval);
             _scanTimer.Elapsed += ScanIntervalElapsed;
+            _scanTimer.Enabled = true;
         }
 
         private void HandleEventGroup(List<SignalEventDetails> eventGroup)
         {
-            if(eventGroup.IsNullOrEmpty())
+            if (eventGroup.IsNullOrEmpty())
                 return;
+            var groupCount = eventGroup.Count;
+            var transmitter = eventGroup.First().Transmitter;
+
+            if (groupCount == 1)
+            {
+
+                var signalEventDetails = eventGroup.First();
+                if (transmitter.Position == PointF.Empty)
+                {
+                    transmitter.Position = signalEventDetails.BleReceiver.Position;
+                }
+                else
+                {
+                    transmitter.Position = CalculatePointInBetween(transmitter.Position,
+                        signalEventDetails.BleReceiver.Position);
+                }
+                if (TransmitterPositionDiscovered != null)
+                    TransmitterPositionDiscovered(transmitter);
+                return;
+            }
             var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
-            var groupCount = orderedGroup.Count;
+
             var detectionMirrors = new List<Tuple<PointF, PointF>>(groupCount);
             int totalSignalWeight = 0;
             for (int i = 0; i < groupCount; i++)
@@ -65,9 +87,8 @@ namespace BLELocator.Core.Utils
                 detectionMirrors.Add(mirrors);
                 totalSignalWeight += signalEventDetails.Rssi;
             }
-            PointF? eventPosition=null;
+            PointF? eventPosition = null;
             //get first mirror closest to leading sensor then advance to each mirror closest to event position
-            var transmitter = eventGroup.First().Transmitter;
             for (int i = 1; i < groupCount - 1; i++)
             {
                 var signalEventDetails = orderedGroup[i];
@@ -78,7 +99,7 @@ namespace BLELocator.Core.Utils
                 else
                 {
                     refPosition = signalEventDetails.BleReceiver.Position;
-                    
+
                 }
                 var selectedNextPoint = GetDistance(nextMirrors.Item1, refPosition) <
                                         GetDistance(nextMirrors.Item2, refPosition)
@@ -107,10 +128,11 @@ namespace BLELocator.Core.Utils
 
                 //}
             }
-            if(!eventPosition.HasValue)
+            if (!eventPosition.HasValue)
                 return;
             transmitter.Position = eventPosition.Value;
-            TransmitterPositionDiscovered(transmitter);
+            if (TransmitterPositionDiscovered != null)
+                TransmitterPositionDiscovered(transmitter);
         }
 
         private PointF CalculatePointInBetween(PointF refPosition, PointF selectedNextPoint)
@@ -159,7 +181,7 @@ namespace BLELocator.Core.Utils
                 foreach (var monitoredReceiver in _monitoredReceivers)
                 {
                     var signalDetails = _eventsByReceiver[monitoredReceiver][monitoredTransmitter.TransmitterName].Clone();
-                    if ((signalDetails.TimeStamp - now) < _eventLifeSpan)
+                    if ((now - signalDetails.TimeStamp) < _eventLifeSpan)
                     {
                         relevantSignals.Add(signalDetails);
                     }
@@ -168,7 +190,7 @@ namespace BLELocator.Core.Utils
                     continue;
                 _eventGroupHandler.Post(relevantSignals);
             }
-
+            _scanTimer.Start();
         }
         public void HandleDiscoveryEvent(DeviceDiscoveryEvent deviceDiscoveryEvent)
         {
@@ -180,7 +202,9 @@ namespace BLELocator.Core.Utils
                 return;
             eventDetails.Rssi = deviceDiscoveryEvent.Rssi;
             eventDetails.TimeStamp = deviceDiscoveryEvent.TimeStamp;
-            //eventDetails.Distance = _signalToDistanceConverter.GetDistance(deviceDiscoveryEvent.Rssi);
+            eventDetails.Distance = _signalToDistanceConverter.GetDistance(deviceDiscoveryEvent.Rssi);
+            if (TransmitterSignalDiscovered != null)
+                TransmitterSignalDiscovered(eventDetails);
         }
     }
 }

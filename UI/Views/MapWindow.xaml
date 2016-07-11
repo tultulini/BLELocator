@@ -6,7 +6,7 @@
         Height="1024"
         Title="MapWindow">
     <Window.Resources>
-        <Style x:Key="AnimateTriggerStyle"
+        <Style x:Key="AnimateReceiverStyle"
                TargetType="{x:Type Ellipse}">
             <Setter Property="Opacity"
                     Value="1"></Setter>
@@ -16,12 +16,35 @@
                     <Trigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1"
                                                  To="0"
                                                  Duration="0:0:1"
                                                  RepeatBehavior="5x"></DoubleAnimation>
 
                               
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="AnimateTransmitterStyle"
+               TargetType="{x:Type Rectangle}">
+            <Setter Property="Opacity"
+                    Value="1"></Setter>
+            <Style.Triggers>
+                <Trigger Property="Visibility"
+                         Value="Visible">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="1"
+                                                 To="0"
+                                                 Duration="0:0:1"
+                                                 RepeatBehavior="5x"></DoubleAnimation>
+
+
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
@@ -38,13 +61,14 @@
                     Background="LightSkyBlue">
                 <Ellipse Name="OriginEllipse"
                          Width="20"
-                         Stroke="DarkCyan"
+                         Stroke="White"
                          Height="20"
                          Opacity="0.3"
                          Fill="Orange"
                          HorizontalAlignment="Center"
                          ToolTip="(0,0)"
                          VerticalAlignment="Center"></Ellipse>
+                
                 <!--<Polygon Width="40" Height="40" Name="OriginPolygon" Points="0,0 20,0 0,0,-20,0 0,0 0,20 0,0 0,-20" StrokeThickness="4"  Stroke="Firebrick"
                          ></Polygon>-->
                 <!--<ItemsControl ItemsSource="{Binding ReceiverDetections}">

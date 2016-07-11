@@ -31,3 +31,7 @@ C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\View
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Views\MapWindow.g.cs
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Views\ConfigWindow.baml
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Views\MainWindow.baml
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Views\CapturePickerWindow.g.cs
+C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\obj\Debug\Views\CapturePickerWindow.baml

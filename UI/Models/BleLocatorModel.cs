@@ -25,7 +25,7 @@ namespace BLELocator.UI.Models
         private readonly static object _instanceLock = new object();
 
         private static string _configFilePath = Path.Combine(Directory.GetCurrentDirectory(),
-            typeof (BleSystemConfiguration).Name + ".json");
+            typeof(BleSystemConfiguration).Name + ".json");
 
         private const int InitialEventCount = 10000;
         private bool _capturingEvents = false;
@@ -33,7 +33,8 @@ namespace BLELocator.UI.Models
 
         private object _captureLock = new object();
         public event Action<string> OnLogMessage;
-        
+        public event Action<DeviceDiscoveryEvent> OnRegisteredTransmitterEvent;
+
         public static BleLocatorModel Instance
         {
             get
@@ -50,15 +51,15 @@ namespace BLELocator.UI.Models
                     return _instance;
                 }
             }
-            
+
         }
 
 
         private BleLocatorModel()
         {
             BleUdpListeners = new List<BLEUdpListener>();
-            _capturedEventsSession = new EventCaptureSession(); 
-            _captureEventHandler = new ActionBlock<DeviceDiscoveryEvent>((ce) => CaptureEvent(ce), new ExecutionDataflowBlockOptions{MaxDegreeOfParallelism = 5});
+            _capturedEventsSession = new EventCaptureSession();
+            _captureEventHandler = new ActionBlock<DeviceDiscoveryEvent>((ce) => CaptureEvent(ce), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
             LoadConfiguration();
         }
 
@@ -79,7 +80,7 @@ namespace BLELocator.UI.Models
             if (!File.Exists(_configFilePath))
             {
                 BleSystemConfiguration = new BleSystemConfiguration();
-               
+
                 return;
             }
             else
@@ -109,7 +110,7 @@ namespace BLELocator.UI.Models
             }
             foreach (var receiver in BleSystemConfiguration.BleReceivers)
             {
-                if(!receiver.Value.IsEnabled)
+                if (!receiver.Value.IsEnabled)
                     continue;
                 var listener = new BLEUdpListener(receiver.Value);
                 listener.OnDeviceDiscovery += OnDeviceDiscovery;
@@ -125,12 +126,15 @@ namespace BLELocator.UI.Models
             get { return BleUdpListeners.HasSomething() && BleUdpListeners.Any(r => r.IsListening); }
         }
 
-        public BleConnectionState ConnectionState { get
+        public BleConnectionState ConnectionState
         {
-            return ConnectedToListeners
-                ? BleConnectionState.Connected
-                : BleConnectionState.Disconnected;
-        }}
+            get
+            {
+                return ConnectedToListeners
+                    ? BleConnectionState.Connected
+                    : BleConnectionState.Disconnected;
+            }
+        }
         public void Disconnect()
         {
             if (BleUdpListeners.HasSomething())
@@ -158,7 +162,7 @@ namespace BLELocator.UI.Models
             }
             _capturingEvents = true;
         }
-        private  void CaptureEvent(DeviceDiscoveryEvent discoveryEvent)
+        private void CaptureEvent(DeviceDiscoveryEvent discoveryEvent)
         {
             if (!_capturingEvents)
                 return;
@@ -167,8 +171,20 @@ namespace BLELocator.UI.Models
             {
                 if (!_capturingEvents || discoveryEvent.DeviceDetails.Name.IsNullOrEmpty())
                     return;
-                if (_capturedEventsSession.CapturedEvents.TryGetValue(discoveryEvent.DeviceDetails.Name, out events))
-                    events.Add(discoveryEvent); 
+                var signalStrength = discoveryEvent.Rssi;
+                var receiver = discoveryEvent.BleReceiver;
+                if ((receiver.IncomingPort ==12000 && signalStrength<-80)||signalStrength < receiver.SignalPassLowerBound || signalStrength > receiver.SignalPassUpperBound)
+                {
+                    OnLogMessage(string.Format("Rssi={0} out of range [{1}:{2}] for {3}", signalStrength,
+                        receiver.SignalPassLowerBound, receiver.SignalPassUpperBound, receiver.IPAddress));
+                    return;
+                }
+                if (!_capturedEventsSession.CapturedEvents.TryGetValue(discoveryEvent.DeviceDetails.Name, out events))
+                    return;
+                events.Add(discoveryEvent);
+                if (OnRegisteredTransmitterEvent == null)
+                    return;
+                OnRegisteredTransmitterEvent(discoveryEvent);
             }
         }
 
@@ -185,9 +201,9 @@ namespace BLELocator.UI.Models
                     Directory.CreateDirectory(captureDirectory);
                 var now = DateTime.Now;
                 var jsonFilePath = Path.Combine(captureDirectory,
-                    string.Format("DeciveEventCapture{0:yyyy_MM_dd_hhmmssfff}.json",now));
+                    string.Format("DeciveEventCapture{0:yyyy_MM_dd_hhmmssfff}.json", now));
                 var json = JsonConvert.SerializeObject(_capturedEventsSession);
-                using (var writer = new StreamWriter(new FileStream(jsonFilePath,FileMode.Create,FileAccess.Write)))
+                using (var writer = new StreamWriter(new FileStream(jsonFilePath, FileMode.Create, FileAccess.Write)))
                 {
                     writer.Write(json);
                 }
@@ -205,7 +221,7 @@ namespace BLELocator.UI.Models
                 //_captureEventHandler.Complete();
                 //_captureEventHandler.Completion.Wait();
                 _capturedEventsSession.End = DateTime.Now;
-                
+
             }
         }
         private void OnDeviceDiscovery(DeviceDiscoveryEvent discoveryEvent)
@@ -213,10 +229,10 @@ namespace BLELocator.UI.Models
             if (_capturingEvents)
             {
                 _captureEventHandler.Post(discoveryEvent);
-                if(discoveryEvent.DeviceDetails.Name.IsNullOrEmpty() || !BleSystemConfiguration.BleTransmitters.ContainsKey(discoveryEvent.DeviceDetails.Name))
+                if (discoveryEvent.DeviceDetails.Name.IsNullOrEmpty() || !BleSystemConfiguration.BleTransmitters.ContainsKey(discoveryEvent.DeviceDetails.Name))
                     return;
-                OnLogMessage(string.Format("Discovered: Name: {0}, RSSI: {1}", discoveryEvent.DeviceDetails.Name,
-                    discoveryEvent.Rssi));
+                OnLogMessage(string.Format("Discovered: Name: {0}, RSSI: {1}, IP: {2}", discoveryEvent.DeviceDetails.Name,
+                    discoveryEvent.Rssi,discoveryEvent.BleReceiver.IPAddress));
 
             }
         }
@@ -234,7 +250,7 @@ namespace BLELocator.UI.Models
                 else
                 {
                     OnLogMessage(string.Format("{0} is connected", bleReceiver.IPAddress));
-                    
+
                 }
             }
         }
@@ -256,7 +272,26 @@ namespace BLELocator.UI.Models
                 OnLogMessage(string.Format("{0} is empty => aborting replay", fileName));
                 return;
             }
-            var captureSession = JsonConvert.DeserializeObject<EventCaptureSession>(json);
+            EventCaptureSession captureSession;
+            try
+            {
+               captureSession = JsonConvert.DeserializeObject<EventCaptureSession>(json);
+            }
+            catch (Exception exception)
+            {
+                OnLogMessage(string.Format("Couldn't deserialize {0} => exception: {1}", json,exception));
+                return;
+
+                
+            }
+            OnLogMessage(string.Format("Replay Comments: {0} ", captureSession.Comments));
+            await PlaySession(captureSession);
+            OnLogMessage(string.Format("Replay {0} finalized ", fileName));
+
+        }
+
+        public async Task PlaySession(EventCaptureSession captureSession)
+        {
             var discoveryEvents = new List<DeviceDiscoveryEvent>();
             foreach (var capturedEvents in captureSession.CapturedEvents)
             {
@@ -264,7 +299,7 @@ namespace BLELocator.UI.Models
             }
             discoveryEvents = discoveryEvents.OrderBy(x => x.TimeStamp).ToList();
             var timeDiffs = new TimeSpan[discoveryEvents.Count];
-            for (int i = 0; i < discoveryEvents.Count-1; i++)
+            for (int i = 0; i < discoveryEvents.Count - 1; i++)
             {
                 timeDiffs[i] = discoveryEvents[i + 1].TimeStamp - discoveryEvents[i].TimeStamp;
             }

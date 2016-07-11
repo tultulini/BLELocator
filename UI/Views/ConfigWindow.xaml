@@ -168,6 +168,14 @@
                                     <ColumnDefinition Width="10"></ColumnDefinition>
                                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                                     <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="10"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
@@ -205,13 +213,25 @@
                                 <TextBox Grid.Row="0"
                                          Grid.Column="18"
                                          Text="{Binding PositionY}"></TextBox>
-                                <CheckBox Grid.Row="0" Grid.Column="20" IsChecked="{Binding IsEnabled}" Content="Enabled"></CheckBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="20"
+                                           Text="Lower Bound"></TextBlock>
+                                <TextBox Text="{Binding SignalPassLowerBound}"
+                                         Grid.Row="0"
+                                         Grid.Column="22"></TextBox>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="24"
+                                           Text="Upperf Bound"></TextBlock>
+                                <TextBox Text="{Binding SignalPassUpperBound}"
+                                         Grid.Row="0"
+                                         Grid.Column="26"></TextBox>
+                                <CheckBox Grid.Row="0" Grid.Column="28" IsChecked="{Binding IsEnabled}" Content="Enabled"></CheckBox>
                                 <Button  Grid.Row="0"
-                                         Grid.Column="22"
+                                         Grid.Column="30"
                                          Content="-"
                                          Command="{Binding RemoveReceiverCommand}"></Button>
                                 <Rectangle Grid.Row="0"
-                                           Grid.Column="24"
+                                           Grid.Column="32"
                                            Fill="Red"
                                            Width="15"
                                            Height="15"

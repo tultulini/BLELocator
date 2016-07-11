@@ -15,6 +15,8 @@ namespace BLELocator.UI.ViewModels
         private int _incomingPort;
         private string _locationName;
         private bool _isEnabled;
+        private int _signalPassUpperBound;
+        private int _signalPassLowerBound;
         public BleReceiver BleReceiver { get; private set; }
 
         public override int GetHashCode()
@@ -45,6 +47,8 @@ namespace BLELocator.UI.ViewModels
             PositionX = receiver.Position.X;
             PositionY = receiver.Position.Y;
             IsEnabled = receiver.IsEnabled;
+            SignalPassUpperBound = receiver.SignalPassUpperBound;
+            SignalPassLowerBound = receiver.SignalPassLowerBound;
         }
 
         public void UpdateEntity()
@@ -55,6 +59,8 @@ namespace BLELocator.UI.ViewModels
             BleReceiver.LocationName = LocationName;
             BleReceiver.Position = new PointF(PositionX, PositionY);
             BleReceiver.IsEnabled = IsEnabled;
+            BleReceiver.SignalPassLowerBound = SignalPassLowerBound;
+            BleReceiver.SignalPassUpperBound = SignalPassUpperBound;
         }
         public string IPAddress
         {
@@ -120,6 +126,27 @@ namespace BLELocator.UI.ViewModels
             {
                 _isEnabled = value; 
                 RaisePropertyChanged(()=>IsEnabled);
+            }
+        }
+
+        public int SignalPassUpperBound
+        {
+            get { return _signalPassUpperBound; }
+            set
+            {
+                _signalPassUpperBound = value;
+                RaisePropertyChanged(()=>SignalPassUpperBound);
+            }
+        }
+
+        public int SignalPassLowerBound
+        {
+            get { return _signalPassLowerBound; }
+            set
+            {
+                _signalPassLowerBound = value;
+                RaisePropertyChanged(() => SignalPassLowerBound);
+                
             }
         }
 
