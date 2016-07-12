@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
@@ -35,7 +36,7 @@ namespace BLELocator.UI.Views
             //_mapSizeMetric = new SizeF(60f,60f);
             //_conversionRatio = new SizeF((float) (MapCanvas.Width/_mapSizeMetric.Width), (float) (MapCanvas.Height/_mapSizeMetric.Height));
             _conversionRatio = new SizeF(20f, 20f);
-            _mapOrigin = new PointF(10, 20);
+            _mapOrigin = new PointF(10,5);
             SetOrigin();
             _receiverDetections = new Dictionary<string, Dictionary<string, Ellipse>>();
             foreach (var bleReceiver in configuration.BleReceivers)
@@ -51,6 +52,37 @@ namespace BLELocator.UI.Views
                 AddTransmitter(bleTransmitter.Value);
 
             }
+            AddRoomContour();
+        }
+
+        private void AddRoomContour()
+        {
+            var passageMetricSize = new SizeF(45, 4);
+            var passageSize = MetricToLocal(passageMetricSize);
+            PassageRect.Width = passageSize.Width;
+            PassageRect.Height = passageSize.Height;
+            SetElementPosition(PassageRect, new PointF(0, -2));
+
+            var passageMetricSizeVert = new SizeF(4, 40);
+            var passageSizeVert = MetricToLocal(passageMetricSizeVert);
+            PassageRect2.Width = passageSizeVert.Width;
+            PassageRect2.Height = passageSizeVert.Height;
+            SetElementPosition(PassageRect2, new PointF(0, 2));
+
+
+            var elevatorMetricSize = new SizeF(4, 2);
+            var elevatorSize = MetricToLocal(elevatorMetricSize);
+            ElevatorRect.Width = elevatorSize.Width;
+            ElevatorRect.Height = elevatorSize.Height;
+            SetElementPosition(ElevatorRect, new PointF(5, -2 - elevatorMetricSize.Height));
+
+            var controlRoomMetricSize = new SizeF(8, 10);
+            var controlRoomSize = MetricToLocal(controlRoomMetricSize);
+            ControlRoomRect.Width = controlRoomSize.Width;
+            ControlRoomRect.Height = controlRoomSize.Height;
+            SetElementPosition(ControlRoomRect, new PointF(0 - controlRoomMetricSize.Width, -2));
+            SetElementPosition(ExitText, new PointF(passageMetricSize.Width, 0));
+
         }
 
         private void AddTransmitter( BleTransmitter bleTransmitter)
@@ -125,13 +157,19 @@ namespace BLELocator.UI.Views
                     StrokeDashOffset = offset,
                     Width = 50,
                     Height = 50,
-                    Style = (Style)this.Resources["AnimateReceiverStyle"]
+                    Style = (Style)this.Resources["AnimateReceiverStyle"],
+                    
                 };
                 offset += 2;
                 receiverDetections.Add(bleTransmitter.Key, ellipse);
                 MapCanvas.Children.Add(ellipse);
                 SetElementPositionByCenter(ellipse, receiver.Position);
             }
+        }
+
+        private string FormatReceiverTag(BleReceiver receiver)
+        {
+            return string.Format("{0} - ({1},{2})", receiver.IPAddress, receiver.Position.X, receiver.Position.Y);
         }
 
         private void AddReceiver(BleReceiver receiver)
@@ -141,7 +179,8 @@ namespace BLELocator.UI.Views
                 Fill = Brushes.DarkRed,
                 Stroke = Brushes.DimGray,
                 Width = 10,
-                Height = 10
+                Height = 10,
+                    ToolTip = FormatReceiverTag(receiver),
 
             };
             MapCanvas.Children.Add(ellipse);
@@ -163,6 +202,15 @@ namespace BLELocator.UI.Views
             var localPosition = MetricToLocal(metricPosition);
             localPosition.X -= (float)element.Width / 2f;
             localPosition.Y -= (float)element.Height / 2f;
+
+            Canvas.SetLeft(element, localPosition.X);
+            Canvas.SetTop(element, localPosition.Y);
+        }
+        private void SetElementPosition(FrameworkElement element, PointF metricPosition)
+        {
+            metricPosition.X += _mapOrigin.X;
+            metricPosition.Y += _mapOrigin.Y;
+            var localPosition = MetricToLocal(metricPosition);
 
             Canvas.SetLeft(element, localPosition.X);
             Canvas.SetTop(element, localPosition.Y);
