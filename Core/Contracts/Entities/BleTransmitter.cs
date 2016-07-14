@@ -10,5 +10,6 @@ namespace BLELocator.Core.Contracts.Entities
         public PointF Position { get; set; }
         public float ErrorRadius { get; set; }
         public Color ColorCode{ get; set; }
+        public float VisualOffset { get; set; }
     }
 }

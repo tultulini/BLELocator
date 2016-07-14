@@ -103,8 +103,10 @@ namespace BLELocator.UI.ViewModels
                     InsertMessage("Couldn't load any event sessions");
                     return;
                 }
+                sessions=sessions.OrderByDescending(s => s.Start).ToList();
                 var capturePickerVm = new CapturePickerViewModel
                 {
+                    
                     CaptureSessions = new ObservableCollection<EventCaptureSession>(sessions)
                 };
                 var window = new CapturePickerWindow

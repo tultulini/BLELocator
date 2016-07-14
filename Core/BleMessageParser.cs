@@ -34,7 +34,7 @@ namespace BLELocator.Core
             var message = messageWrapper.MessageParts.ToString(messageWrapper.MessageStartCharIndex,
                 messageWrapper.MessageEnd - messageWrapper.MessageStartCharIndex + 1);
             
-            if (message.IsNullOrEmpty() || message.IndexOf(UnkownDeviceName, StringComparison.Ordinal) >= 0)
+            if (message.IsNullOrEmpty())// || message.IndexOf(UnkownDeviceName, StringComparison.Ordinal) >= 0)
             {
                 return;
             }

@@ -19,7 +19,7 @@
                                                  From="1"
                                                  To="0"
                                                  Duration="0:0:0.5"
-                                                 RepeatBehavior="3x"></DoubleAnimation>
+                                                 RepeatBehavior="2x"></DoubleAnimation>
 
 
                             </Storyboard>
@@ -29,7 +29,7 @@
             </Style.Triggers>
         </Style>
         <Style x:Key="AnimateTransmitterStyle"
-               TargetType="{x:Type Rectangle}">
+               TargetType="{x:Type Grid}">
             <Setter Property="Opacity"
                     Value="1"></Setter>
             <Style.Triggers>
@@ -41,7 +41,7 @@
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                  From="1"
                                                  To="0"
-                                                 Duration="0:0:1"
+                                                 Duration="0:0:0.5"
                                                  RepeatBehavior="5x"></DoubleAnimation>
 
 
@@ -99,9 +99,13 @@
                    BorderBrush="White"
                    BorderThickness="4"><TextBlock Text="Passage" HorizontalAlignment="Left" FontSize="18" VerticalAlignment="Top" Foreground="Lime"></TextBlock></Border>
         <!--<Rectangle Name="ControlRoomRect" Stroke="Yellow" StrokeDashArray="4 2"></Rectangle>-->
-                <TextBlock Text="Exit" Foreground="Red" FontSize="26" Name="ExitText"><TextBlock.LayoutTransform>
+                <TextBlock Text="Exit" Foreground="Red" FontSize="26" Name="ExitText90Deg"><TextBlock.LayoutTransform>
                     <RotateTransform Angle="270"></RotateTransform>
                 </TextBlock.LayoutTransform></TextBlock>
+        <TextBlock Text="Exit"
+                   Foreground="Red"
+                   FontSize="26"
+                   Name="ExitTextHor"/>
         <Border Name="PassageRect2"
                 BorderBrush="White"
                 BorderThickness="4">

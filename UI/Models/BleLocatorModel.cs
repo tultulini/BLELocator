@@ -73,6 +73,15 @@ namespace BLELocator.UI.Models
             {
                 writer.Write(json);
             }
+            if (BleSystemConfiguration.BleTransmitters.HasSomething())
+            {
+                float offset = 0;
+                foreach (var t in BleSystemConfiguration.BleTransmitters.Values)
+                {
+                    t.VisualOffset = offset;
+                    offset += 0.2f;
+                }
+            }
         }
         private void LoadConfiguration()
         {
@@ -92,6 +101,15 @@ namespace BLELocator.UI.Models
                 }
 
                 BleSystemConfiguration = JsonConvert.DeserializeObject<BleSystemConfiguration>(json);
+                if (BleSystemConfiguration.BleTransmitters.HasSomething())
+                {
+                    float offset = 0;
+                    foreach (var t  in BleSystemConfiguration.BleTransmitters.Values)
+                    {
+                        t.VisualOffset = offset;
+                        offset += 0.2f;
+                    }
+                }
             }
 
 
@@ -173,7 +191,7 @@ namespace BLELocator.UI.Models
                     return;
                 var signalStrength = discoveryEvent.Rssi;
                 var receiver = discoveryEvent.BleReceiver;
-                if ((receiver.IncomingPort ==12000 && signalStrength<-80)||signalStrength < receiver.SignalPassLowerBound || signalStrength > receiver.SignalPassUpperBound)
+                if (signalStrength < receiver.SignalPassLowerBound || signalStrength > receiver.SignalPassUpperBound)
                 {
                     OnLogMessage(string.Format("Rssi={0} out of range [{1}:{2}] for {3}", signalStrength,
                         receiver.SignalPassLowerBound, receiver.SignalPassUpperBound, receiver.IPAddress));
