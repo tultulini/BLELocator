@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Tpdkdesign.net-Refresh-Cl-System-Security-Reader-2.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\Deployment\3rd Party\MVVMLight\GalaSoft.MvvmLight.dll</HintPath>
@@ -179,6 +182,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\replay-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Tpdkdesign.net-Refresh-Cl-System-Security-Reader-2.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

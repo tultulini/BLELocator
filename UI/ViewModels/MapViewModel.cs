@@ -24,20 +24,20 @@ namespace BLELocator.UI.ViewModels
         
         private void Init()
         {
-            _model = BleLocatorModel.Instance;
-            var config = _model.BleSystemConfiguration;
-            _eventMapper = new EventMapper(config.BleReceivers.Values.ToList(), config.BleTransmitters.Values.ToList());
-            foreach (var bleReceiver in config.BleReceivers)
-            {
-                var receiverTransmitters = new Dictionary<string, DeviceDiscoveryEvent>();
+            //_model = BleLocatorModel.Instance;
+            //var config = _model.BleSystemConfiguration;
+            //_eventMapper = new EventMapper(config.BleReceivers.Values.ToList(), config.BleTransmitters.Values.ToList());
+            //foreach (var bleReceiver in config.BleReceivers)
+            //{
+            //    var receiverTransmitters = new Dictionary<string, DeviceDiscoveryEvent>();
 
-                foreach (var bleTransmitter in config.BleTransmitters)
-                {
-                    receiverTransmitters.Add(bleTransmitter.Value.TransmitterName, null);
-                    Transmitters.Add(new TransmitterViewModel(bleTransmitter.Value));
-                }
-                //_eventsByReceiver.Add(new ReceiverViewModel(bleReceiver.Value), receiverTransmitters);
-            }
+            //    foreach (var bleTransmitter in config.BleTransmitters)
+            //    {
+            //        receiverTransmitters.Add(bleTransmitter.Value.TransmitterName, null);
+            //        Transmitters.Add(new TransmitterViewModel(bleTransmitter.Value));
+            //    }
+            //    //_eventsByReceiver.Add(new ReceiverViewModel(bleReceiver.Value), receiverTransmitters);
+            //}
           
 
         }

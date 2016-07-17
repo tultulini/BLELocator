@@ -37,7 +37,13 @@ namespace BLELocator.UI.ViewModels
 
         public RelayCommand ListenToReceiversCommand
         {
-            get { return _listenToReceiversCommand ?? (_listenToReceiversCommand = new RelayCommand(OnListenToReceivers)); }
+            get { return _listenToReceiversCommand ?? (_listenToReceiversCommand = new RelayCommand(OnListenToReceivers,CanListenToReceivers)); }
+        }
+
+        private bool CanListenToReceivers()
+        {
+            return _model.BleSystemConfiguration.BleReceivers.HasSomething() &&
+                   _model.BleSystemConfiguration.BleReceivers.Values.Any(r => r.IsEnabled);
         }
 
         public RelayCommand CaptureEventsCommand
@@ -58,7 +64,12 @@ namespace BLELocator.UI.ViewModels
 
         public RelayCommand ReplayCaptureCommand
         {
-            get { return _replayCaptureCommand ?? (_replayCaptureCommand = new RelayCommand(OnReplayCapture)); }
+            get { return _replayCaptureCommand ?? (_replayCaptureCommand = new RelayCommand(OnReplayCapture,CanReplayCapture)); }
+        }
+
+        private bool CanReplayCapture()
+        {
+            return !_model.ConnectedToListeners;
         }
 
         private void OnReplayCapture()
@@ -142,12 +153,10 @@ namespace BLELocator.UI.ViewModels
         private void OnOpenMap()
         {
 
-            //var mapVM = new MapViewModel();
             var window = new MapWindow(_model.BleSystemConfiguration);
             _eventMapper.TransmitterSignalDiscovered +=
-                s => window.HandleDiscoveryEvent(s.BleReceiver, s.Transmitter.TransmitterName, s.Distance);
+                s => window.HandleDiscoveryEvent(s.BleReceiver, s.Transmitter.MacAddress, s.Distance);
             _eventMapper.TransmitterPositionDiscovered += window.HandleTransmitterLocationEvent;
-            //window.DataContext = mapVM;
             window.Show();
         }
 
@@ -171,6 +180,7 @@ namespace BLELocator.UI.ViewModels
                 _model.Connect(); 
 
             }
+            ReplayCaptureCommand.RaiseCanExecuteChanged();
         }
 
         private void OnEditConfiguration()
@@ -181,6 +191,7 @@ namespace BLELocator.UI.ViewModels
             window.DataContext = configVM;
             configVM.OnSaved += window.Close;
             window.ShowDialog();
+            ListenToReceiversCommand.RaiseCanExecuteChanged();
         }
 
         public BleLocatorViewModel()

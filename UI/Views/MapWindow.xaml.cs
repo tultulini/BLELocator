@@ -114,7 +114,7 @@ namespace BLELocator.UI.Views
             
             grid.Children.Add(manPath1);
             grid.Children.Add(manPath2);
-            _transmitterPositions.Add(bleTransmitter.TransmitterName, grid);
+            _transmitterPositions.Add(bleTransmitter.MacAddress, grid);
             MapCanvas.Children.Add(grid);
             //var humanAverageSize = MetricToLocal(new SizeF(0.5f, 1.8f));
             //var shape = new RectangleShape
@@ -137,7 +137,7 @@ namespace BLELocator.UI.Views
             WPFMethodInvoker.InvokeAsync(() =>
             {
                 FrameworkElement transmitterElement;
-                if (!_transmitterPositions.TryGetValue(transmitter.TransmitterName, out transmitterElement))
+                if (!_transmitterPositions.TryGetValue(transmitter.MacAddress, out transmitterElement))
                 {
                     return;
                 }
@@ -149,7 +149,7 @@ namespace BLELocator.UI.Views
             });
         }
 
-        public void HandleDiscoveryEvent(BleReceiver receiver, string transmitterName, float distance)
+        public void HandleDiscoveryEvent(BleReceiver receiver, string transmitterMacAddress, float distance)
         {
            WPFMethodInvoker.InvokeAsync(() =>
            {
@@ -157,7 +157,7 @@ namespace BLELocator.UI.Views
                if (!_receiverDetections.TryGetValue(receiver.IPAddress.ToString(), out receiverDetections))
                    return;
                Ellipse ellipse;
-               if (!receiverDetections.TryGetValue(transmitterName, out ellipse))
+               if (!receiverDetections.TryGetValue(transmitterMacAddress, out ellipse))
                {
                    return;
 

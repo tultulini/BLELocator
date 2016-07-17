@@ -29,7 +29,8 @@ namespace BLELocator.UI.Models
 
         private const int InitialEventCount = 10000;
         private bool _capturingEvents = false;
-        private readonly ActionBlock<DeviceDiscoveryEvent> _captureEventHandler;
+        private bool _monitoringEvents = false;
+        private readonly ActionBlock<DeviceDiscoveryEvent> _discoveredEventHandler;
 
         private object _captureLock = new object();
         public event Action<string> OnLogMessage;
@@ -59,7 +60,7 @@ namespace BLELocator.UI.Models
         {
             BleUdpListeners = new List<BLEUdpListener>();
             _capturedEventsSession = new EventCaptureSession();
-            _captureEventHandler = new ActionBlock<DeviceDiscoveryEvent>((ce) => CaptureEvent(ce), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
+            _discoveredEventHandler = new ActionBlock<DeviceDiscoveryEvent>((ce) => HandleDiscoveryEvent(ce), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
             LoadConfiguration();
         }
 
@@ -135,6 +136,7 @@ namespace BLELocator.UI.Models
                 BleUdpListeners.Add(listener);
                 listener.StartListener();
             }
+            _monitoringEvents = BleUdpListeners.Any(l => l.IsListening);
             if (OnConnectionStateChanged != null)
                 OnConnectionStateChanged(ConnectionState);
         }
@@ -155,6 +157,7 @@ namespace BLELocator.UI.Models
         }
         public void Disconnect()
         {
+            _monitoringEvents = false;
             if (BleUdpListeners.HasSomething())
             {
                 foreach (var bleUdpListener in BleUdpListeners)
@@ -176,18 +179,22 @@ namespace BLELocator.UI.Models
             OnLogMessage("Starting Capture");
             foreach (var bleTransmitter in BleSystemConfiguration.BleTransmitters)
             {
-                _capturedEventsSession.CapturedEvents.Add(bleTransmitter.Value.TransmitterName, new List<DeviceDiscoveryEvent>(InitialEventCount));
+                _capturedEventsSession.CapturedEvents.Add(bleTransmitter.Value.MacAddress, new List<DeviceDiscoveryEvent>(InitialEventCount));
             }
             _capturingEvents = true;
         }
-        private void CaptureEvent(DeviceDiscoveryEvent discoveryEvent)
+        private void HandleDiscoveryEvent(DeviceDiscoveryEvent discoveryEvent)
         {
-            if (!_capturingEvents)
+            if (!_monitoringEvents)
+                return;
+            if (OnRegisteredTransmitterEvent != null)
+                OnRegisteredTransmitterEvent(discoveryEvent);
+            if(!_capturingEvents)
                 return;
             List<DeviceDiscoveryEvent> events;
             lock (_captureLock)
             {
-                if (!_capturingEvents || discoveryEvent.DeviceDetails.Name.IsNullOrEmpty())
+                if (!_capturingEvents || discoveryEvent.DeviceDetails.MacAddress.IsNullOrEmpty())
                     return;
                 var signalStrength = discoveryEvent.Rssi;
                 var receiver = discoveryEvent.BleReceiver;
@@ -197,12 +204,9 @@ namespace BLELocator.UI.Models
                         receiver.SignalPassLowerBound, receiver.SignalPassUpperBound, receiver.IPAddress));
                     return;
                 }
-                if (!_capturedEventsSession.CapturedEvents.TryGetValue(discoveryEvent.DeviceDetails.Name, out events))
+                if (!_capturedEventsSession.CapturedEvents.TryGetValue(discoveryEvent.DeviceDetails.MacAddress, out events))
                     return;
                 events.Add(discoveryEvent);
-                if (OnRegisteredTransmitterEvent == null)
-                    return;
-                OnRegisteredTransmitterEvent(discoveryEvent);
             }
         }
 
@@ -244,12 +248,13 @@ namespace BLELocator.UI.Models
         }
         private void OnDeviceDiscovery(DeviceDiscoveryEvent discoveryEvent)
         {
-            if (_capturingEvents)
+            if (_monitoringEvents)
             {
-                _captureEventHandler.Post(discoveryEvent);
-                if (discoveryEvent.DeviceDetails.Name.IsNullOrEmpty() || !BleSystemConfiguration.BleTransmitters.ContainsKey(discoveryEvent.DeviceDetails.Name))
+
+                if (discoveryEvent.DeviceDetails.MacAddress.IsNullOrEmpty() || !BleSystemConfiguration.BleTransmitters.ContainsKey(discoveryEvent.DeviceDetails.MacAddress))
                     return;
-                OnLogMessage(string.Format("Discovered: Name: {0}, RSSI: {1}, IP: {2}", discoveryEvent.DeviceDetails.Name,
+                _discoveredEventHandler.Post(discoveryEvent);
+                OnLogMessage(string.Format("Discovered: Name: {0}, Mac: {1} RSSI: {2}, IP: {3}", discoveryEvent.DeviceDetails.Name,discoveryEvent.DeviceDetails.MacAddress,
                     discoveryEvent.Rssi,discoveryEvent.BleReceiver.IPAddress));
 
             }
@@ -310,6 +315,7 @@ namespace BLELocator.UI.Models
 
         public async Task PlaySession(EventCaptureSession captureSession)
         {
+            _monitoringEvents = true;
             var discoveryEvents = new List<DeviceDiscoveryEvent>();
             foreach (var capturedEvents in captureSession.CapturedEvents)
             {
@@ -331,6 +337,7 @@ namespace BLELocator.UI.Models
                 discoveryEvent.TimeStamp = DateTime.Now;
                 OnDeviceDiscovery(discoveryEvent);
             }
+            _monitoringEvents = false;
         }
     }
 }

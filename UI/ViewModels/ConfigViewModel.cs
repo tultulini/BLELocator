@@ -186,7 +186,7 @@ namespace BLELocator.UI.ViewModels
             {
                 transmitterViewModel.UpdateEntity();
                 var transmitter = transmitterViewModel.BleTransmitter;
-                config.BleTransmitters[transmitter.TransmitterName] = transmitter;
+                config.BleTransmitters[transmitter.MacAddress] = transmitter;
             }
             model.SaveConfiguration();
             InsertMessage("Configuration Saved");

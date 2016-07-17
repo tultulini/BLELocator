@@ -35,9 +35,9 @@ namespace BLELocator.Core.Utils
                 var receiverTransmitters = new Dictionary<string, SignalEventDetails>(transmitters.Count);
                 transmitters.ForEach(t =>
                 {
-                    if (receiverTransmitters.ContainsKey(t.TransmitterName))
+                    if (receiverTransmitters.ContainsKey(t.MacAddress))
                         return;
-                    receiverTransmitters.Add(t.TransmitterName,
+                    receiverTransmitters.Add(t.MacAddress,
                         new SignalEventDetails { Transmitter = t, BleReceiver = bleReceiver });
                 });
                 _eventsByReceiver.Add(bleReceiver, receiverTransmitters);
@@ -115,18 +115,8 @@ namespace BLELocator.Core.Utils
                     : currentMirrors.Item2;
                 }
                 eventPosition = CalculatePointInBetween(refPosition, selectedNextPoint);
-                //var distance1_1 = GetDistance(currentMirrors.Item1, nextMirrors.Item1);
-                //var distance2_1 = GetDistance(currentMirrors.Item2, nextMirrors.Item1);
-                //var distance1_2 = GetDistance(currentMirrors.Item1, nextMirrors.Item2);
-                //var distance2_2 = GetDistance(currentMirrors.Item2, nextMirrors.Item2);
-                //if (distance1_1 <= distance2_1)
-                //{
-                //    if (distance1_1 < distance1_2)
-                //    {
+               
 
-                //    }
-
-                //}
             }
             if (!eventPosition.HasValue)
                 return;
@@ -180,7 +170,7 @@ namespace BLELocator.Core.Utils
                 var relevantSignals = new List<SignalEventDetails>(_monitoredReceivers.Count);
                 foreach (var monitoredReceiver in _monitoredReceivers)
                 {
-                    var signalDetails = _eventsByReceiver[monitoredReceiver][monitoredTransmitter.TransmitterName].Clone();
+                    var signalDetails = _eventsByReceiver[monitoredReceiver][monitoredTransmitter.MacAddress].Clone();
                     if ((now - signalDetails.TimeStamp) < _eventLifeSpan)
                     {
                         relevantSignals.Add(signalDetails);
@@ -198,7 +188,7 @@ namespace BLELocator.Core.Utils
             if (!_eventsByReceiver.TryGetValue(deviceDiscoveryEvent.BleReceiver, out receiverTransmitters))
                 return;
             SignalEventDetails eventDetails;
-            if (!receiverTransmitters.TryGetValue(deviceDiscoveryEvent.DeviceDetails.Name, out eventDetails))
+            if (!receiverTransmitters.TryGetValue(deviceDiscoveryEvent.DeviceDetails.MacAddress, out eventDetails))
                 return;
             eventDetails.Rssi = deviceDiscoveryEvent.Rssi;
             eventDetails.TimeStamp = deviceDiscoveryEvent.TimeStamp;
