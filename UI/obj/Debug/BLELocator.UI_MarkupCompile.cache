@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\talf\Documents\Visual Studio 2013\Projects\BLELocator\UI\App.xaml
-5-1847707039
+629221083
 
-25-1190414013
+282134451178
 71-1383077638
-Views\CapturePickerWindow.xaml;Views\CaptureSessionDetailsView.xaml;Views\ConfigWindow.xaml;Views\MainWindow.xaml;Views\MapWindow.xaml;
+Views\CapturePickerWindow.xaml;Views\CaptureSessionDetailsView.xaml;Views\ConfigWindow.xaml;Views\MainWindow.xaml;Views\MapWindow.xaml;Views\WayPointConfigWindow.xaml;
 
 False
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using BLELocator.UI.Models;
+using BLELocator.UI.Views;
 using GalaSoft.MvvmLight.Command;
 
 namespace BLELocator.UI.ViewModels
@@ -16,7 +18,32 @@ namespace BLELocator.UI.ViewModels
         private bool _keepCheckingIsAlive;
         private int _keepAliveInterval;
         private ObservableCollection<TransmitterEntryViewModel> _transmitters;
+        private RelayCommand _configureWayPointsCommand;
         public event Action OnSaved;
+
+        public RelayCommand ConfigureWayPointsCommand
+        {
+            get { return _configureWayPointsCommand ?? (_configureWayPointsCommand = new RelayCommand(OnConfigureWayPoints)); }
+            
+        }
+
+        private void OnConfigureWayPoints()
+        {
+            var config = BleLocatorModel.Instance.BleSystemConfiguration;
+            var wayPointConfigVM = new WayPointsConfigViewModel(config.ReceiverPaths);
+            var window = new WayPointConfigWindow
+            {
+                DataContext = wayPointConfigVM
+            };
+            var res = window.ShowDialog();
+            if (res.HasValue && res.Value)
+            {
+                ReceiverPaths.Clear();
+                ReceiverPaths.AddRange(wayPointConfigVM.ReceiverPaths.Select(r=>r.ReceiverPath));
+                
+            }
+
+        }
 
         public ConfigViewModel()
         {
@@ -32,6 +59,7 @@ namespace BLELocator.UI.ViewModels
         private void LoadExistingConfiguration()
         {
             var config = BleLocatorModel.Instance.BleSystemConfiguration;
+            ReceiverPaths = config.ReceiverPaths.HasSomething()? new List<ReceiverPath>(config.ReceiverPaths):new List<ReceiverPath>();
             if (config.BleReceivers.HasSomething())
             {
                 foreach (var bleReceiver in config.BleReceivers)
@@ -97,7 +125,7 @@ namespace BLELocator.UI.ViewModels
         }
 
         public ObservableCollection<ReceiverViewModel> Receivers { get; set; }
-
+        public List<ReceiverPath> ReceiverPaths { get; set; }
         public RelayCommand AddReceiverCommand
         {
             get { return _addReceiverCommand ?? (_addReceiverCommand = new RelayCommand(OnAddReceiver)); }
@@ -176,6 +204,8 @@ namespace BLELocator.UI.ViewModels
             var config = model.BleSystemConfiguration;
             config.BleReceivers.Clear();
             config.BleTransmitters.Clear();
+            config.ReceiverPaths.Clear();
+            config.ReceiverPaths.AddRange(ReceiverPaths);
             foreach (var receiverViewModel in Receivers)
             {
                 receiverViewModel.UpdateEntity();

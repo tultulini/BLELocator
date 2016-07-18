@@ -82,6 +82,8 @@
     <Compile Include="Utils\ColorExtensions.cs" />
     <Compile Include="Utils\WPFMethodInvoker.cs" />
     <Compile Include="ViewModels\CapturePickerViewModel.cs" />
+    <Compile Include="ViewModels\ReceiverPathViewModel.cs" />
+    <Compile Include="ViewModels\WayPointsConfigViewModel.cs" />
     <Compile Include="Views\CapturePickerWindow.xaml.cs">
       <DependentUpon>CapturePickerWindow.xaml</DependentUpon>
     </Compile>
@@ -98,6 +100,9 @@
     <Compile Include="ViewModels\ReceiverViewModel.cs" />
     <Compile Include="ViewModels\TransmitterEntryViewModel.cs" />
     <Compile Include="ViewModels\TransmitterViewModel.cs" />
+    <Compile Include="Views\WayPointConfigWindow.xaml.cs">
+      <DependentUpon>WayPointConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\CapturePickerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -130,6 +135,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\MapWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WayPointConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

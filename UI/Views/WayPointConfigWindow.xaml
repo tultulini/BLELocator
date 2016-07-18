@@ -1,0 +1,64 @@
+﻿<Window x:Class="BLELocator.UI.Views.WayPointConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WayPointConfigWindow"
+        Height="300"
+        Width="300"
+        FontSize="24"
+        SizeToContent="WidthAndHeight"
+        
+        xmlns:viewModels="clr-namespace:BLELocator.UI.ViewModels">
+    <!--<Window.DataContext>
+        <viewModels:WayPointsConfigViewModel></viewModels:WayPointsConfigViewModel>
+    </Window.DataContext>-->
+    <StackPanel Orientation="Vertical">
+        <ListBox ItemsSource="{Binding ReceiverPaths}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Top"
+                                   Text="{Binding ReceiverPath.From.IPAddress}">
+                        
+                        
+                        
+                        </TextBlock>
+                        <TextBlock>&lt;==&gt;</TextBlock>
+                        <TextBlock VerticalAlignment="Top"
+                                   Text="{Binding ReceiverPath.To.IPAddress}">
+
+
+
+                        </TextBlock>
+                        <TextBlock Text="Way points: "></TextBlock>
+                        <StackPanel Orientation="Vertical">
+                            <ListBox ItemsSource="{Binding ReceiverPath.WayPoints}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run Text="("></Run>
+                                            <Run Text="{Binding X}"></Run>
+                                            <Run Text=","></Run>
+                                            <Run Text="{Binding Y}"></Run>
+                                            <Run Text=")"></Run>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="x: "></TextBlock>
+                                <TextBox Text="{Binding NewWayPointX, Mode=TwoWay}"></TextBox>
+                                <TextBlock Text="y: "></TextBlock>
+                                <TextBox Text="{Binding NewWayPointY, Mode=TwoWay}"></TextBox>
+                                <Button Content="Add" Width="80" Command="{Binding AddNewWayPointCommand}"></Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <Button Content="Clear"
+                                Width="80"
+                                Command="{Binding ClearWayPointsCommand}"></Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="OK" Click="OKClicked"></Button>
+    </StackPanel>
+</Window>

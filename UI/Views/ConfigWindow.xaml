@@ -7,8 +7,7 @@
         Title="ConfigWindow"
         SizeToContent="WidthAndHeight"
         Width="auto"
-        FontSize="18"
-        >
+        FontSize="18">
     <Window.DataContext>
         <viewModels:ConfigViewModel></viewModels:ConfigViewModel>
     </Window.DataContext>
@@ -23,14 +22,22 @@
     <StackPanel Orientation="Vertical">
         <GroupBox Header="Keep alive">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding KeepCheckingIsAlive}" VerticalAlignment="Center"
+                <CheckBox IsChecked="{Binding KeepCheckingIsAlive}"
+                          VerticalAlignment="Center"
                           Content="Keep Checking"
                           Margin="10"></CheckBox>
                 <Label Content="Interval [msec]: "
                        VerticalAlignment="Center"
                        Margin="10"></Label>
-                <TextBox VerticalAlignment="Center" Text="{Binding KeepAliveInterval}" Margin="10" Width="100"></TextBox>
+                <TextBox VerticalAlignment="Center"
+                         Text="{Binding KeepAliveInterval}"
+                         Margin="10"
+                         Width="100"></TextBox>
             </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Way Points">
+            <Button Content="Configure"
+                    Command="{Binding ConfigureWayPointsCommand}" Width="150" HorizontalAlignment="Left"></Button>
         </GroupBox>
         <GroupBox Header="Transmitter Tags">
             <StackPanel Orientation="Vertical">
@@ -86,7 +93,7 @@
                                          Grid.Column="6"
                                          Text="{Binding MacAddress, Mode=TwoWay}"></TextBox>
 
-                                
+
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="10"
                                            Text="First Name"></TextBlock>
@@ -99,12 +106,15 @@
                                 <TextBox Grid.Row="0"
                                          Grid.Column="16"
                                          Text="{Binding HolderLastName, Mode=TwoWay}"></TextBox>
-                                <TextBlock Grid.Row="0" Grid.Column="18" Text="Colour"></TextBlock>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="18"
+                                           Text="Colour"></TextBlock>
                                 <ComboBox Grid.Row="0"
                                           Grid.Column="20"
-                                          ItemsSource="{Binding AvailableColors}" SelectedItem="{Binding ColorCode}">
+                                          ItemsSource="{Binding AvailableColors}"
+                                          SelectedItem="{Binding ColorCode}">
                                     <ComboBox.ItemTemplate>
-                                        
+
                                         <DataTemplate>
                                             <Rectangle Width="16"
                                                        Height="16"
@@ -121,7 +131,10 @@
                                          Command="{Binding RemoveTransmitterCommand}"></Button>
                                 <Rectangle Grid.Row="0"
                                            Grid.Column="24"
-                                           Fill="Red" Width="15" Height="15" Visibility="{Binding IsValid, Converter={StaticResource BooleanToVisibilityConverter}}"></Rectangle>
+                                           Fill="Red"
+                                           Width="15"
+                                           Height="15"
+                                           Visibility="{Binding IsValid, Converter={StaticResource BooleanToVisibilityConverter}}"></Rectangle>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -225,7 +238,10 @@
                                 <TextBox Text="{Binding SignalPassUpperBound}"
                                          Grid.Row="0"
                                          Grid.Column="26"></TextBox>
-                                <CheckBox Grid.Row="0" Grid.Column="28" IsChecked="{Binding IsEnabled}" Content="Enabled"></CheckBox>
+                                <CheckBox Grid.Row="0"
+                                          Grid.Column="28"
+                                          IsChecked="{Binding IsEnabled}"
+                                          Content="Enabled"></CheckBox>
                                 <Button  Grid.Row="0"
                                          Grid.Column="30"
                                          Content="-"
@@ -253,8 +269,11 @@
                 Width="100"
                 Content="Save"
                 Command="{Binding SaveConfigurationCommnand}"></Button>
-        <GroupBox Header="Log" HorizontalAlignment="Stretch">
-            <ListBox ItemsSource="{Binding Messages, Mode=OneWay}" HorizontalAlignment="Stretch" Height="300"></ListBox>
+        <GroupBox Header="Log"
+                  HorizontalAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Messages, Mode=OneWay}"
+                     HorizontalAlignment="Stretch"
+                     Height="300"></ListBox>
         </GroupBox>
     </StackPanel>
 </Window>

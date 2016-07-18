@@ -19,8 +19,7 @@ namespace BLELocator.Core.Utils
         private const int ScanInterval = 1000;
         private Timer _scanTimer;
         private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
-        private const double HalfPi = Math.PI / 2.0;
-        public event Action<BleTransmitter> TransmitterPositionDiscovered;
+            public event Action<BleTransmitter> TransmitterPositionDiscovered;
         public event Action<SignalEventDetails> TransmitterSignalDiscovered;
         public EventMapper(List<BleReceiver> receivers, List<BleTransmitter> transmitters)
         {
@@ -64,7 +63,7 @@ namespace BLELocator.Core.Utils
                 }
                 else
                 {
-                    transmitter.Position = CalculatePointInBetween(transmitter.Position,
+                    transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
                         signalEventDetails.BleReceiver.Position);
                 }
                 if (TransmitterPositionDiscovered != null)
@@ -80,7 +79,7 @@ namespace BLELocator.Core.Utils
                 var signalEventDetails = orderedGroup[i];
                 signalEventDetails.Distance = _signalToDistanceConverter.GetDistance(signalEventDetails.Rssi);
                 var otherSignalEventDetails = i < groupCount - 1 ? orderedGroup[i + 1] : orderedGroup[i - 1];
-                double angle = GetAngle(signalEventDetails.BleReceiver.Position,
+                double angle = GeometryUtil.GetAngle(signalEventDetails.BleReceiver.Position,
                     otherSignalEventDetails.BleReceiver.Position);
                 var mirrors = CreateMirroredPoints(signalEventDetails.BleReceiver.Position, signalEventDetails.Distance,
                     angle);
@@ -101,20 +100,20 @@ namespace BLELocator.Core.Utils
                     refPosition = signalEventDetails.BleReceiver.Position;
 
                 }
-                var selectedNextPoint = GetDistance(nextMirrors.Item1, refPosition) <
-                                        GetDistance(nextMirrors.Item2, refPosition)
+                var selectedNextPoint = GeometryUtil.GetDistance(nextMirrors.Item1, refPosition) <
+                                        GeometryUtil.GetDistance(nextMirrors.Item2, refPosition)
                     ? nextMirrors.Item1
                     : nextMirrors.Item2;
 
                 if (!eventPosition.HasValue)
                 {
                     var currentMirrors = detectionMirrors[i];
-                    refPosition = GetDistance(currentMirrors.Item1, selectedNextPoint) <
-                                        GetDistance(currentMirrors.Item2, selectedNextPoint)
+                    refPosition = GeometryUtil.GetDistance(currentMirrors.Item1, selectedNextPoint) <
+                                        GeometryUtil.GetDistance(currentMirrors.Item2, selectedNextPoint)
                     ? currentMirrors.Item1
                     : currentMirrors.Item2;
                 }
-                eventPosition = CalculatePointInBetween(refPosition, selectedNextPoint);
+                eventPosition = GeometryUtil.CalculatePointInBetween(refPosition, selectedNextPoint);
                
 
             }
@@ -125,32 +124,10 @@ namespace BLELocator.Core.Utils
                 TransmitterPositionDiscovered(transmitter);
         }
 
-        private PointF CalculatePointInBetween(PointF refPosition, PointF selectedNextPoint)
-        {
-            return new PointF((refPosition.X + selectedNextPoint.X) / 2, (refPosition.Y + selectedNextPoint.Y) / 2);
-        }
+        
 
-        private double GetAngle(PointF positionA, PointF positionB)
-        {
-            var dx = (positionB.X - positionA.X);
-            var dy = (positionB.Y - positionA.Y);
-            if (Math.Abs(dx) < 0.01)
-                return dy > 0 ? HalfPi : (-1.0) * HalfPi;
-            if (Math.Abs(dy) < 0.01)
-                return dx > 0 ? 0 : Math.PI;
-            return Math.Atan(dy / dx);
-        }
-        private double GetDistance(PointF positionA, PointF positionB)
-        {
-            var dx = (positionB.X - positionA.X);
-            var dy = (positionB.Y - positionA.Y);
-            if (Math.Abs(dx) < 0.01)
-                return Math.Abs(dy);
-            if (Math.Abs(dy) < 0.01)
-                return Math.Abs(dx);
-
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
+       
+       
 
         private Tuple<PointF, PointF> CreateMirroredPoints(PointF origin, double distance, double angle)
         {

@@ -61,6 +61,7 @@
     <Compile Include="Contracts\Entities\LinearSignalToDistanceConverter.cs" />
     <Compile Include="Contracts\Entities\LineDetails.cs" />
     <Compile Include="Contracts\Entities\MessageWrapper.cs" />
+    <Compile Include="Contracts\Entities\ReceiverPath.cs" />
     <Compile Include="Contracts\Entities\SignalEventDetails.cs" />
     <Compile Include="Contracts\Entities\SignalToDistanceConverterBase.cs" />
     <Compile Include="Contracts\Entities\TagHolder.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Utils\CollectionExtensions.cs" />
     <Compile Include="Utils\EventMapper.cs" />
     <Compile Include="Utils\FiniteList.cs" />
+    <Compile Include="Utils\GeometryUtil.cs" />
     <Compile Include="Utils\JsonConverterDictionary.cs" />
     <Compile Include="Utils\JsonConverterIPAddress.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
