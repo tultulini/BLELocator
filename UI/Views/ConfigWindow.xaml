@@ -36,8 +36,13 @@
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Way Points">
-            <Button Content="Configure"
-                    Command="{Binding ConfigureWayPointsCommand}" Width="150" HorizontalAlignment="Left"></Button>
+            <StackPanel Orientation="Vertical">
+                <Button Content="Configure"
+                        Command="{Binding ConfigureWayPointsCommand}"
+                        Width="120" Margin="10"
+                        HorizontalAlignment="Left"></Button>
+                <CheckBox Margin="10" Content="Use Weighted Points Alg." IsChecked="{Binding UseWeightedPoints}"></CheckBox>
+            </StackPanel>
         </GroupBox>
         <GroupBox Header="Transmitter Tags">
             <StackPanel Orientation="Vertical">

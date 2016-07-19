@@ -53,6 +53,7 @@
     <Compile Include="BleMessageParser.cs" />
     <Compile Include="Contracts\Entities\BleConnectionStateMessage.cs" />
     <Compile Include="Contracts\Entities\BleReceiver.cs" />
+    <Compile Include="Contracts\Entities\BleSystemConfiguration.cs" />
     <Compile Include="Contracts\Entities\BleTransmitter.cs" />
     <Compile Include="BLEUDPListener.cs" />
     <Compile Include="Contracts\Entities\DeviceDetails.cs" />

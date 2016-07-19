@@ -21,18 +21,32 @@ namespace BLELocator.Core.Utils
         private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
             public event Action<BleTransmitter> TransmitterPositionDiscovered;
         public event Action<SignalEventDetails> TransmitterSignalDiscovered;
-        public EventMapper(List<BleReceiver> receivers, List<BleTransmitter> transmitters)
+        private Dictionary<BleReceiver, Dictionary<ReceiverPath, ReceiverPath>> _receiverPathsTree;
+        private Dictionary<ReceiverPath, ReceiverPath> _receiverPaths;
+        private bool _useWeightedPath;
+        public EventMapper(BleSystemConfiguration systemConfiguration)
         {
-            _eventGroupHandler = new ActionBlock<List<SignalEventDetails>>(deg => HandleEventGroup(deg), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 5 });
-            _eventsByReceiver = new Dictionary<BleReceiver, Dictionary<string, SignalEventDetails>>(receivers.Count);
-            _monitoredReceivers = receivers;
-            _monitoredTransmitters = transmitters;
-            foreach (var bleReceiver in receivers)
+            var receiverPaths = systemConfiguration.ReceiverPaths;
+            _useWeightedPath = systemConfiguration.UseWeightedPaths;
+            _receiverPaths = receiverPaths.ToDictionary(rp => rp);
+            _eventGroupHandler = new ActionBlock<List<SignalEventDetails>>(deg => HandleEventGroup(deg), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 });
+            _eventsByReceiver = new Dictionary<BleReceiver, Dictionary<string, SignalEventDetails>>(systemConfiguration.BleReceivers.Count);
+            _monitoredReceivers = systemConfiguration.BleReceivers.Values.ToList();
+            _monitoredTransmitters = systemConfiguration.BleTransmitters.Values.ToList();
+            _receiverPathsTree = new Dictionary<BleReceiver, Dictionary<ReceiverPath, ReceiverPath>>();
+            foreach (var bleReceiver in _monitoredReceivers)
             {
                 if (_eventsByReceiver.ContainsKey(bleReceiver))
                     continue;
-                var receiverTransmitters = new Dictionary<string, SignalEventDetails>(transmitters.Count);
-                transmitters.ForEach(t =>
+                var pathDictionary = new Dictionary<ReceiverPath, ReceiverPath>();
+                _receiverPathsTree.Add(bleReceiver, pathDictionary);
+                foreach (var receiverPath in receiverPaths)
+                {
+                    if(Equals(receiverPath.From,bleReceiver)||Equals(receiverPath.To,bleReceiver))
+                        pathDictionary.Add(receiverPath,receiverPath);
+                }
+                var receiverTransmitters = new Dictionary<string, SignalEventDetails>(_monitoredTransmitters.Count);
+                _monitoredTransmitters.ForEach(t =>
                 {
                     if (receiverTransmitters.ContainsKey(t.MacAddress))
                         return;
@@ -46,6 +60,19 @@ namespace BLELocator.Core.Utils
             _scanTimer.Enabled = true;
         }
 
+        private ReceiverPath FindPath(BleReceiver target, PointF location, out double distance)
+        {
+            distance = 0;
+            Dictionary<ReceiverPath, ReceiverPath> availablePaths;
+            if (!_receiverPathsTree.TryGetValue(target, out availablePaths) || availablePaths.IsNullOrEmpty())
+                return null;
+            foreach (var availablePath in availablePaths.Values)
+            {
+                if (availablePath.PointOnPath(availablePath.GetOther(target).Position, location, out distance))
+                    return availablePath;
+            }
+            return null;
+        }
         private void HandleEventGroup(List<SignalEventDetails> eventGroup)
         {
             if (eventGroup.IsNullOrEmpty())
@@ -63,15 +90,56 @@ namespace BLELocator.Core.Utils
                 }
                 else
                 {
-                    transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
-                        signalEventDetails.BleReceiver.Position);
+                    if (_useWeightedPath)
+                    {
+                        double distanceFromSource;
+                        var path = FindPath(signalEventDetails.BleReceiver, transmitter.Position, out distanceFromSource);
+                        if (path == null)
+                        {
+                            transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
+                                signalEventDetails.BleReceiver.Position);
+                        }
+                        else
+                        {
+                            distanceFromSource = distanceFromSource + (path.Distance - distanceFromSource) / 2;
+                            var newPoint = path.FindPointInPath(path.GetOther(signalEventDetails.BleReceiver), distanceFromSource);
+                            transmitter.Position = newPoint;
+                        } 
+                    }
+                    else
+                    {
+                        transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
+                           signalEventDetails.BleReceiver.Position);
+                    }
                 }
                 if (TransmitterPositionDiscovered != null)
                     TransmitterPositionDiscovered(transmitter);
                 return;
             }
-            var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
 
+            //can't order by timestamp because it's too random and created by the server
+            var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
+            var eventPosition = _useWeightedPath ? CalculateWeightedPathPoint(orderedGroup) : CalculateWithMirrorPositions(orderedGroup);
+            if (!eventPosition.HasValue)
+                return;
+            transmitter.Position = eventPosition.Value;
+            if (TransmitterPositionDiscovered != null)
+                TransmitterPositionDiscovered(transmitter);
+        }
+
+        private PointF? CalculateWeightedPathPoint(List<SignalEventDetails> orderedGroup)
+        {
+            //const int linearCorrection = 100;
+            //var rsiVector = orderedGroup.Select(s => s.Rssi + linearCorrection);
+            //var totalSignal = rsiVector.Sum();
+            return CalculateWithMirrorPositions(orderedGroup);
+        }
+
+        private PointF? CalculateWithMirrorPositions(List<SignalEventDetails> orderedGroup)
+        {
+
+            PointF? eventPosition = null;
+            int groupCount = orderedGroup.Count;
             var detectionMirrors = new List<Tuple<PointF, PointF>>(groupCount);
             int totalSignalWeight = 0;
             for (int i = 0; i < groupCount; i++)
@@ -86,7 +154,6 @@ namespace BLELocator.Core.Utils
                 detectionMirrors.Add(mirrors);
                 totalSignalWeight += signalEventDetails.Rssi;
             }
-            PointF? eventPosition = null;
             //get first mirror closest to leading sensor then advance to each mirror closest to event position
             for (int i = 1; i < groupCount - 1; i++)
             {
@@ -98,7 +165,6 @@ namespace BLELocator.Core.Utils
                 else
                 {
                     refPosition = signalEventDetails.BleReceiver.Position;
-
                 }
                 var selectedNextPoint = GeometryUtil.GetDistance(nextMirrors.Item1, refPosition) <
                                         GeometryUtil.GetDistance(nextMirrors.Item2, refPosition)
@@ -109,25 +175,15 @@ namespace BLELocator.Core.Utils
                 {
                     var currentMirrors = detectionMirrors[i];
                     refPosition = GeometryUtil.GetDistance(currentMirrors.Item1, selectedNextPoint) <
-                                        GeometryUtil.GetDistance(currentMirrors.Item2, selectedNextPoint)
-                    ? currentMirrors.Item1
-                    : currentMirrors.Item2;
+                                  GeometryUtil.GetDistance(currentMirrors.Item2, selectedNextPoint)
+                        ? currentMirrors.Item1
+                        : currentMirrors.Item2;
                 }
                 eventPosition = GeometryUtil.CalculatePointInBetween(refPosition, selectedNextPoint);
-               
-
             }
-            if (!eventPosition.HasValue)
-                return;
-            transmitter.Position = eventPosition.Value;
-            if (TransmitterPositionDiscovered != null)
-                TransmitterPositionDiscovered(transmitter);
+            return eventPosition;
         }
 
-        
-
-       
-       
 
         private Tuple<PointF, PointF> CreateMirroredPoints(PointF origin, double distance, double angle)
         {

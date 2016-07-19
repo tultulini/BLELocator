@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using BLELocator.Core.Contracts.Entities;
 using BLELocator.Core.Utils;
 using Newtonsoft.Json;
 
-namespace BLELocator.UI
+namespace BLELocator.Core.Contracts.Entities
 {
     public class BleSystemConfiguration
     {
@@ -21,5 +20,6 @@ namespace BLELocator.UI
         public List<ReceiverPath> ReceiverPaths { get; set; }
         public bool KeepCheckingIsAlive { get; set; }
         public int KeepAliveInterval { get; set; }
+        public bool UseWeightedPaths { get; set; }
     }
 }

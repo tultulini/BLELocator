@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -109,6 +110,7 @@ namespace BLELocator.UI.Models
                     {
                         t.VisualOffset = offset;
                         offset += 0.2f;
+                        t.Position = new PointF(0,0);
                     }
                 }
             }

@@ -19,12 +19,23 @@ namespace BLELocator.UI.ViewModels
         private int _keepAliveInterval;
         private ObservableCollection<TransmitterEntryViewModel> _transmitters;
         private RelayCommand _configureWayPointsCommand;
+        private bool _useWeightedPoints;
         public event Action OnSaved;
 
         public RelayCommand ConfigureWayPointsCommand
         {
             get { return _configureWayPointsCommand ?? (_configureWayPointsCommand = new RelayCommand(OnConfigureWayPoints)); }
             
+        }
+
+        public bool UseWeightedPoints
+        {
+            get { return _useWeightedPoints; }
+            set
+            {
+                _useWeightedPoints = value; 
+                RaisePropertyChanged(()=>UseWeightedPoints);
+            }
         }
 
         private void OnConfigureWayPoints()
@@ -60,6 +71,7 @@ namespace BLELocator.UI.ViewModels
         {
             var config = BleLocatorModel.Instance.BleSystemConfiguration;
             ReceiverPaths = config.ReceiverPaths.HasSomething()? new List<ReceiverPath>(config.ReceiverPaths):new List<ReceiverPath>();
+            UseWeightedPoints = config.UseWeightedPaths;
             if (config.BleReceivers.HasSomething())
             {
                 foreach (var bleReceiver in config.BleReceivers)
@@ -202,6 +214,8 @@ namespace BLELocator.UI.ViewModels
                 return;
             var model = BleLocatorModel.Instance;
             var config = model.BleSystemConfiguration;
+            config.UseWeightedPaths = UseWeightedPoints ;
+
             config.BleReceivers.Clear();
             config.BleTransmitters.Clear();
             config.ReceiverPaths.Clear();

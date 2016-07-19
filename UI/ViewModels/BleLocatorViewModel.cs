@@ -199,8 +199,7 @@ namespace BLELocator.UI.ViewModels
             _model = BleLocatorModel.Instance;
             _model.OnLogMessage += InsertMessage;
             _model.OnConnectionStateChanged += OnConnectionStateChanged;
-            _eventMapper = new EventMapper(_model.BleSystemConfiguration.BleReceivers.Values.ToList(),
-                _model.BleSystemConfiguration.BleTransmitters.Values.ToList());
+            _eventMapper = new EventMapper(_model.BleSystemConfiguration);
 
             _model.OnRegisteredTransmitterEvent += e => _eventMapper.HandleDiscoveryEvent(e);
         }

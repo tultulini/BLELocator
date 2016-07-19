@@ -125,7 +125,6 @@
     </Compile>
     <Compile Include="Models\BleLocatorModel.cs" />
     <Compile Include="ViewModels\BleLocatorViewModel.cs" />
-    <Compile Include="BleSystemConfiguration.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="Views\ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
