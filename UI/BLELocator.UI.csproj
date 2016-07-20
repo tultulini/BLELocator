@@ -92,7 +92,6 @@
     </Compile>
     <Compile Include="ViewModels\CaptureSessionDetailsViewModel.cs" />
     <Compile Include="ViewModels\LoggedViewModel.cs" />
-    <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="Views\MapWindow.xaml.cs">
       <DependentUpon>MapWindow.xaml</DependentUpon>
     </Compile>

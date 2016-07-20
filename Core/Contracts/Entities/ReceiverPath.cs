@@ -60,17 +60,18 @@ namespace BLELocator.Core.Contracts.Entities
                 return From;
             return null;
         }
-        public bool PointOnPath(PointF start, PointF location, out double distance)
+        public bool PointOnPath(BleReceiver origin, PointF location, out double distance)
         {
+            PointF start = origin.Position;
             distance = 0;
             PointF end;
             bool backwards;
-            if (start == From.Position)
+            if (Equals(origin,From))
             {
                 end = To.Position;
                 backwards = false;
             }
-            else if (start == To.Position)
+            else if (Equals(origin,To))
             {
                 end = From.Position;
                 backwards = true;
@@ -89,14 +90,23 @@ namespace BLELocator.Core.Contracts.Entities
                 firstWayPoint = WayPoints.Last();
                 if (GeometryUtil.PointOnPath(location, start, firstWayPoint, out distance))
                     return true;
-                
+                var totalDistance = GeometryUtil.GetDistance(start, firstWayPoint);
                 for (int i = waypPontCount - 1; i > 0; i--)
                 {
                     if (GeometryUtil.PointOnPath(location, WayPoints[i], WayPoints[i - 1], out distance))
+                    {
+                        distance += totalDistance;
                         return true;
+                    }
+                    totalDistance += GeometryUtil.GetDistance(WayPoints[i], WayPoints[i + 1]);
                 }
                 lastWayPoint = WayPoints.First();
-                return GeometryUtil.PointOnPath(location, lastWayPoint, end, out distance);
+                if (GeometryUtil.PointOnPath(location, lastWayPoint, end, out distance))
+                {
+                    distance += totalDistance;
+
+                    return true;
+                }
 
             }
 

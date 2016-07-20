@@ -68,7 +68,7 @@ namespace BLELocator.Core.Utils
                 return null;
             foreach (var availablePath in availablePaths.Values)
             {
-                if (availablePath.PointOnPath(availablePath.GetOther(target).Position, location, out distance))
+                if (availablePath.PointOnPath(availablePath.GetOther(target), location, out distance))
                     return availablePath;
             }
             return null;
