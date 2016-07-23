@@ -19,7 +19,7 @@ namespace BLELocator.Core.Utils
         private const int ScanInterval = 1000;
         private Timer _scanTimer;
         private readonly ActionBlock<List<SignalEventDetails>> _eventGroupHandler;
-            public event Action<BleTransmitter> TransmitterPositionDiscovered;
+        public event Action<BleTransmitter> TransmitterPositionDiscovered;
         public event Action<SignalEventDetails> TransmitterSignalDiscovered;
         private Dictionary<BleReceiver, Dictionary<ReceiverPath, ReceiverPath>> _receiverPathsTree;
         private Dictionary<ReceiverPath, ReceiverPath> _receiverPaths;
@@ -42,8 +42,8 @@ namespace BLELocator.Core.Utils
                 _receiverPathsTree.Add(bleReceiver, pathDictionary);
                 foreach (var receiverPath in receiverPaths)
                 {
-                    if(Equals(receiverPath.From,bleReceiver)||Equals(receiverPath.To,bleReceiver))
-                        pathDictionary.Add(receiverPath,receiverPath);
+                    if (Equals(receiverPath.From, bleReceiver) || Equals(receiverPath.To, bleReceiver))
+                        pathDictionary.Add(receiverPath, receiverPath);
                 }
                 var receiverTransmitters = new Dictionary<string, SignalEventDetails>(_monitoredTransmitters.Count);
                 _monitoredTransmitters.ForEach(t =>
@@ -78,53 +78,68 @@ namespace BLELocator.Core.Utils
             if (eventGroup.IsNullOrEmpty())
                 return;
             var groupCount = eventGroup.Count;
+            var signalEventDetails = eventGroup.First();
             var transmitter = eventGroup.First().Transmitter;
-
+            PointF? eventPosition;
             if (groupCount == 1)
             {
+                eventPosition = signalEventDetails.BleReceiver.Position;
+            }
+            else
+            {
 
-                var signalEventDetails = eventGroup.First();
-                if (transmitter.Position == PointF.Empty)
+                var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
+                signalEventDetails = orderedGroup.First();
+                eventPosition = _useWeightedPath ? CalculateWeightedPathPoint(orderedGroup) : CalculateWithMirrorPositions(orderedGroup);
+
+            }
+
+            if (!eventPosition.HasValue)
+                return;
+
+
+            if (!transmitter.PositionInitialized)
+            {
+                transmitter.Position = eventPosition.Value;
+            }
+            else
+            {
+                if (_useWeightedPath)
                 {
-                    transmitter.Position = signalEventDetails.BleReceiver.Position;
-                }
-                else
-                {
-                    if (_useWeightedPath)
+                    double distanceFromSource;
+                    var path = FindPath(signalEventDetails.BleReceiver, transmitter.Position, out distanceFromSource);
+                    if (path == null)
                     {
-                        double distanceFromSource;
-                        var path = FindPath(signalEventDetails.BleReceiver, transmitter.Position, out distanceFromSource);
-                        if (path == null)
-                        {
-                            transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
-                                signalEventDetails.BleReceiver.Position);
-                        }
-                        else
-                        {
-                            distanceFromSource = distanceFromSource + (path.Distance - distanceFromSource) / 2;
-                            var newPoint = path.FindPointInPath(path.GetOther(signalEventDetails.BleReceiver), distanceFromSource);
-                            transmitter.Position = newPoint;
-                        } 
+                        transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
+                            signalEventDetails.BleReceiver.Position);
                     }
                     else
                     {
-                        transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
-                           signalEventDetails.BleReceiver.Position);
+                        distanceFromSource = distanceFromSource + (path.Distance - distanceFromSource) / 2;
+                        var newPoint = path.FindPointInPath(path.GetOther(signalEventDetails.BleReceiver), distanceFromSource);
+                        transmitter.Position = newPoint;
                     }
                 }
-                if (TransmitterPositionDiscovered != null)
-                    TransmitterPositionDiscovered(transmitter);
-                return;
+                else
+                {
+                    transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
+                       signalEventDetails.BleReceiver.Position);
+                }
             }
-
-            //can't order by timestamp because it's too random and created by the server
-            var orderedGroup = eventGroup.OrderByDescending(e => e.Rssi).ToList();
-            var eventPosition = _useWeightedPath ? CalculateWeightedPathPoint(orderedGroup) : CalculateWithMirrorPositions(orderedGroup);
-            if (!eventPosition.HasValue)
-                return;
-            transmitter.Position = eventPosition.Value;
             if (TransmitterPositionDiscovered != null)
                 TransmitterPositionDiscovered(transmitter);
+            return;
+
+
+            //can't order by timestamp because it's too random and created by the server
+
+
+            //transmitter.Position = eventPosition.Value;
+
+
+
+            //if (TransmitterPositionDiscovered != null)
+            //    TransmitterPositionDiscovered(transmitter);
         }
 
         private PointF? CalculateWeightedPathPoint(List<SignalEventDetails> orderedGroup)

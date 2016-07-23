@@ -84,13 +84,13 @@ namespace BLELocator.Core.Contracts.Entities
                 return GeometryUtil.PointOnPath(location, start, end, out distance);
             PointF firstWayPoint, lastWayPoint;
             var waypPontCount = WayPoints.Count;
-
+            double totalDistance;
             if (backwards)
             {
                 firstWayPoint = WayPoints.Last();
                 if (GeometryUtil.PointOnPath(location, start, firstWayPoint, out distance))
                     return true;
-                var totalDistance = GeometryUtil.GetDistance(start, firstWayPoint);
+                totalDistance = GeometryUtil.GetDistance(start, firstWayPoint);
                 for (int i = waypPontCount - 1; i > 0; i--)
                 {
                     if (GeometryUtil.PointOnPath(location, WayPoints[i], WayPoints[i - 1], out distance))
@@ -98,7 +98,7 @@ namespace BLELocator.Core.Contracts.Entities
                         distance += totalDistance;
                         return true;
                     }
-                    totalDistance += GeometryUtil.GetDistance(WayPoints[i], WayPoints[i + 1]);
+                    totalDistance += GeometryUtil.GetDistance(WayPoints[i], WayPoints[i - 1]);
                 }
                 lastWayPoint = WayPoints.First();
                 if (GeometryUtil.PointOnPath(location, lastWayPoint, end, out distance))
@@ -114,14 +114,23 @@ namespace BLELocator.Core.Contracts.Entities
             if (GeometryUtil.PointOnPath(location, start, firstWayPoint, out distance))
                 return true;
 
+            totalDistance = GeometryUtil.GetDistance(start, firstWayPoint);
             for (int i = 0; i < waypPontCount - 1; i++)
             {
                 if (GeometryUtil.PointOnPath(location, WayPoints[i], WayPoints[i + 1], out distance))
+                {
+                    distance += totalDistance;
                     return true;
+                }
+                totalDistance += GeometryUtil.GetDistance(WayPoints[i], WayPoints[i + 1]);
             }
             lastWayPoint = WayPoints.Last();
-            return GeometryUtil.PointOnPath(location, lastWayPoint, end, out distance);
-
+            if (GeometryUtil.PointOnPath(location, lastWayPoint, end, out distance))
+            {
+                distance += totalDistance;
+                return true;
+            }
+            return false;
         }
         public PointF FindPointInPath(BleReceiver source, double distance)
         {
