@@ -111,7 +111,7 @@ namespace BLELocator.Core.Utils
                     if (path == null)
                     {
                         transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
-                            signalEventDetails.BleReceiver.Position);
+                            eventPosition.Value);
                     }
                     else
                     {
@@ -123,7 +123,7 @@ namespace BLELocator.Core.Utils
                 else
                 {
                     transmitter.Position = GeometryUtil.CalculatePointInBetween(transmitter.Position,
-                       signalEventDetails.BleReceiver.Position);
+                       eventPosition.Value);
                 }
             }
             if (TransmitterPositionDiscovered != null)
@@ -151,6 +151,11 @@ namespace BLELocator.Core.Utils
         }
 
         private PointF? CalculateWithMirrorPositions(List<SignalEventDetails> orderedGroup)
+        {
+            return GeometryUtil.CalculatePointInBetween(orderedGroup[0].BleReceiver.Position,
+                orderedGroup[1].BleReceiver.Position);
+        }
+        private PointF? CalculateWithMirrorPositions2(List<SignalEventDetails> orderedGroup)
         {
 
             PointF? eventPosition = null;
