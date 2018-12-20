@@ -1,3 +1,7 @@
+# A POC for a BLE tag tracking in an enclosed space (building)
+## Warning - this code is prototype code and should probably be scrapped if planning on making an actual product
+
+
 ***************
 Setting up NUC
 ***************
@@ -65,7 +69,7 @@ All we're doing here is using HCIDUMP, then egrep to filter out the lines contai
 To manipulate the RSSI value you just need to modify the tester.sh file as needed.
 from http://raspberrypi.stackexchange.com/questions/18292/manipulate-rssi-value
 
-If scanning stops after 2-3 lines make sure you typed ìsudo hcitool lescan ñduplicatesî
+If scanning stops after 2-3 lines make sure you typed ‚Äúsudo hcitool lescan ‚Äìduplicates‚Äù
 **********
 Over TCP
 **********
